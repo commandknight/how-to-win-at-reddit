@@ -14,20 +14,6 @@ name: process_parent_data_pipeline()
 """
 
 
-def create_parentPostDetail_table():
-    # create dbConn
-    # create sql prepared statement to create table
-        # create table if not exists TableName (col1 typ1, ..., colN typN)
-    # execute sql_prepared statement
-    # close dbConn
-    pass
-
-
-def fill_parentPostDetail_with_test_data():
-    # insert fake row 1
-    # insert fake row 2
-    pass
-
 def get_parentpost_json():
     pass
 
