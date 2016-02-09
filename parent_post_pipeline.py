@@ -12,13 +12,24 @@ Create a pipeline processing method: 1 - calls get_all_parentpost_ids,
  2- for each id calls get_parentpost_json, 3- inserts each json data into a new sqlite table
 name: process_parent_data_pipeline()
 """
+import sql_manager
 
-
-def get_parentpost_json():
+def get_parentpost_json(parentPost_id):
+    #use praw (reddit API to fetch JSON of reddit page)
     pass
 
-def get_all_parentpost_ids():
+
+def insert_parent_json_into_parentPostDetail(json_info):
+    # extract json info
+    # sql_manager.insert_parent_detail(list_of_info)
     pass
+
+
+def process_parentPostID(parent_id):
+    insert_parent_json_into_parentPostDetail(get_parentpost_json(parent_id))
+
 
 def process_parent_data_pipeline():
+    for parent_id in sql_manager.get_unique_parent_ids():
+        get_parentpost_json(parent_id)
     pass

@@ -9,6 +9,17 @@ import sqlite3
 jeet_path = '/Users/jnagda/Documents/Reddit_Comments/database.sqlite'
 conn = sqlite3.connect(jeet_path)
 
+
+def get_unique_parent_ids():
+    """
+    Function that returns list of unique link_IDs
+    :return: list of strings (ids)
+    """
+    curr = conn.cursor()
+    curr.execute('SELECT DISTINCT link_id FROM May2015')
+    return curr.fetchall()
+
+
 def get_test_data():
     """
     Returns first 10 rows of May2015 table as a sample test
