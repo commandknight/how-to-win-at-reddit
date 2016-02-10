@@ -7,7 +7,15 @@ Jeet Nagda, Timothie Fujita, Jocelyne Perez
 
 import sqlite3
 jeet_path = '/Users/jnagda/Documents/Reddit_Comments/database.sqlite'
-conn = sqlite3.connect(jeet_path)
+timothie_path = 'C:/Users/Timothie/Desktop/reddit-comments-may-2015/database.sqlite'
+conn = None
+
+def open_db_connetion(path):
+    """
+    Open the db connection to the local machine
+    :param path: Path of local db
+    """
+    conn = sqlite3.connect(path)
 
 
 def get_unique_parent_ids():
@@ -20,11 +28,11 @@ def get_unique_parent_ids():
     return curr.fetchall()
 
 
-def get_test_data():
+def get_test_data(path):
     """
     Returns first 10 rows of May2015 table as a sample test
     """
-    conn = sqlite3.connect(jeet_path)
+    conn = sqlite3.connect(path)
     result = conn.execute('SELECT * FROM May2015 LIMIT 10')
     return result
 
