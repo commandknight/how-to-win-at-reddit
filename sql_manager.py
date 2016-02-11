@@ -21,10 +21,10 @@ def open_db_connetion(path):
 def get_unique_parent_ids():
     """
     Function that returns list of unique link_IDs
-    :return: list of strings (ids)
+    :return: list of tuples (link_ids,subreddit)
     """
     curr = conn.cursor()
-    curr.execute('SELECT DISTINCT link_id FROM May2015')
+    curr.execute('SELECT DISTINCT link_id,subreddit FROM May2015 LIMIT 10')
     return curr.fetchall()
 
 
