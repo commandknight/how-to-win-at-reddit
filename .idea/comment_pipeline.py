@@ -9,6 +9,7 @@ name: get_children_commentsIDs()
 """
 
 import sql_manager
+#import parent_post_pipeline
 import time
 
 def process_child_comments_pipeline(parentPost_id, db_path=None, time_limit=60):
@@ -34,14 +35,22 @@ def get_children_commentIDs(db_connect, parentPost_id, time_limit):
     :return: array of children  IDs
     """
     children_ids = []
+    parent_post_time = 0
     time_limit_epoch = time_limit * 60
+    #parent_query = ('SELECT id, created_utc FROM May2015 WHERE id = \'', parentPost_id, '\'')
+    children_query = ('SELECT id, parent_id, link_id, created_utc FROM May2015 WHERE link_id = \'', parentPost_id, '\'')
+    #parent_query_string = ''.join(parent_query)
+    children_query_string = ''.join(children_query)
 
-    query = ('SELECT id, parent_id, link_id FROM May2015 WHERE link_id = \'', parentPost_id, '\'')
-    query_string = ''.join(query)
-    children = db_connect.perform_query(query_string)
+    #parent_post_time = db_connect.perform_query(parent_query_string)
+    children = db_connect.perform_query(children_query_string)
 
-    for x,y,z in children:
-        children_ids.append(x)
+    #@TODO get parent_post_time and verify when the post is made
+    cutoff_time_limit = parent_post_time + time_limit_epoch
+
+    for x,y,z,a in children:
+        if a < cutoff_time_limit:
+            children_ids.append(x)
 
     return children_ids
 
