@@ -10,7 +10,6 @@ jeet_path = '/Users/jnagda/Documents/Reddit_Comments/database.sqlite'
 timothie_path = 'C:/Users/Timothie/Desktop/reddit-comments-may-2015/database.sqlite'
 conn = None
 
-
 def open_db_connection(path):
     """
     Open the db connection to the local machine
@@ -28,6 +27,14 @@ def get_unique_parent_ids():
     curr = conn.cursor()
     curr.execute('SELECT DISTINCT link_id,subreddit FROM May2015 LIMIT 100')
     return curr.fetchall()
+
+
+def perform_query(query):
+    conn = sqlite3.connect(timothie_path)
+    c = conn.cursor()
+    c.execute(query)
+    result = c.fetchall()
+    return result
 
 
 def get_test_data(path):

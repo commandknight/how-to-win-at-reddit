@@ -21,7 +21,7 @@ def process_child_comments_pipeline(parentPost_id, db_path=None, time_limit=60):
     """
     db_connection = get_db_connection(db_path)
     children_list = get_children_commentIDs(db_connection, parentPost_id, time_limit)
-    db_connection.close_db_connection()
+    #db_connection.close_db_connection()
     return children_list
 
 
@@ -36,6 +36,12 @@ def get_children_commentIDs(db_connect, parentPost_id, time_limit):
     children_ids = []
     time_limit_epoch = time_limit * 60
 
+    query = ('SELECT id, parent_id, link_id FROM May2015 WHERE link_id = \'', parentPost_id, '\'')
+    query_string = ''.join(query)
+    children = db_connect.perform_query(query_string)
+
+    for x,y,z in children:
+        children_ids.append(x)
 
     return children_ids
 
@@ -57,3 +63,4 @@ def get_db_connection(db_path):
 
 if __name__ == '__main__':
     print("Main to test comment pipeline")
+    process_child_comments_pipeline('t3_34gitq')
