@@ -25,6 +25,7 @@ def print_all_testTable():
     curr.close()
 
 
+""" DEPRECATED: NOT USING THIS FUNCTION, USE insert_parentdetails_BIG(list_of_dicts) """
 def insert_parent_dict_into_parentPostDetail(parent_id, parent_info):
     if parent_info is None: return
     curr = cnx.cursor()
@@ -47,6 +48,7 @@ def insert_parent_dict_into_parentPostDetail(parent_id, parent_info):
     curr.close()
 
 
+# Function to insert a list of parent post dictionaries into the mysql database ParentPostTable
 def insert_parentdetails_BIG(list_of_dicts):
     curr = cnx.cursor()
     # curr.executemany(add_parentPostDetail,list_of_dics)
@@ -60,5 +62,6 @@ def insert_parentdetails_BIG(list_of_dicts):
     curr.close()
 
 
+# Function to close database connection
 def close_connection():
     cnx.close()

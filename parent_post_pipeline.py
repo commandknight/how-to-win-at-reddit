@@ -48,9 +48,10 @@ def get_parentpost_dict(parentPost):
         return
 
 
+"""
 def process_parentPostID(parent_id):
     mysql_manager.insert_parent_dict_into_parentPostDetail(parent_id, get_parentpost_dict(parent_id))
-
+"""
 
 def process_parent_data_pipeline():
     start_time = time.time()
