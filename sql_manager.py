@@ -25,7 +25,7 @@ def get_unique_parent_ids():
     """
     conn = sqlite3.connect(jeet_path)
     curr = conn.cursor()
-    curr.execute('SELECT DISTINCT link_id,subreddit FROM May2015 LIMIT 1')
+    curr.execute('SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' LIMIT 50 OFFSET 560')
     return curr.fetchall()
 
 
@@ -42,7 +42,7 @@ def get_test_data(path):
     Returns first 10 rows of May2015 table as a sample test
     """
     conn = sqlite3.connect(path)
-    result = conn.execute('SELECT * FROM May2015 LIMIT 50')
+    result = conn.execute('SELECT * FROM May2015 LIMIT 5')
     return result
 
 

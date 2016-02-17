@@ -32,24 +32,37 @@ def get_parentpost_dict(parentPost):
     r = praw.Reddit(user_agent=user_agent)
     try:
         t = r.get_submission(url_string)
-        return vars(t)
-    except praw.errors.NotFound:
-        return None
+        parent_info = vars(t)
+        parentDict = {
+            'author': '[deleted]' if parent_info['author'] is None else parent_info['author'].name,
+            'id': parentPost[0],
+            'url': parent_info['url'],
+            'timecreated': parent_info['created'],
+            'subreddit_id': parent_info['subreddit_id'],
+            'subreddit': parent_info['subreddit'].display_name,
+            'title': parent_info['title'],
+            'score': parent_info['score'],
+            'selftext': '[deleted]' if parent_info['selftext'] is None else parent_info['selftext']
+        }
+        return parentDict
+    except:
+        return
 
 
 def process_parentPostID(parent_id):
     mysql_manager.insert_parent_dict_into_parentPostDetail(parent_id, get_parentpost_dict(parent_id))
 
 
-
 def process_parent_data_pipeline():
-    sql_manager.create_parentPostDetail_table()
     start_time = time.time()
-    sql_manager.open_db_connection(sql_manager.jeet_path)
     x = 0
+    list_of_dicts = []
     for parent_id in sql_manager.get_unique_parent_ids():
-        print(x, parent_id)
-        process_parentPostID(parent_id)
+        print("GETTING:", x, parent_id)
+        temp = get_parentpost_dict(parent_id)
+        if temp is not None:
+            list_of_dicts.append(temp)
         x += 1
+    mysql_manager.insert_parentdetails_BIG(list_of_dicts)
     print("--- %s seconds ---" % (time.time() - start_time))
     mysql_manager.close_connection()

@@ -10,9 +10,9 @@ config = {
 
 cnx = mysql.connector.connect(**config)
 
-add_parentPostDetail = ("INSERT INTO ParentPostDetails "
-                        "(parentPost_id,url,timecreated_utc,subreddit_id,subreddit,title,score,author) "
-                        "VALUES (%(id)s, %(url)s, %(timecreated)s, %(subreddit_id)s, %(subreddit)s, %(title)s, %(score)s, %(author)s)")
+add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
+                        "(parentPost_id,url,timecreated_utc,subreddit_id,subreddit,title,score,author,selftext) "
+                        "VALUES (%(id)s, %(url)s, %(timecreated)s, %(subreddit_id)s, %(subreddit)s, %(title)s, %(score)s, %(author)s, %(selftext)s)")
 
 
 # DEBUG FUNCTION DELETE ME LATER
@@ -39,11 +39,23 @@ def insert_parent_dict_into_parentPostDetail(parent_id, parent_info):
         'title': parent_info['title'],
         'score': parent_info['score']
     }
-    print(parentDict)
     try:
         curr.execute(add_parentPostDetail, parentDict)
     except:
         print("ERROR in inserting: " + str(curr.statement))
+    cnx.commit()
+    curr.close()
+
+
+def insert_parentdetails_BIG(list_of_dicts):
+    curr = cnx.cursor()
+    # curr.executemany(add_parentPostDetail,list_of_dics)
+    for record in list_of_dicts:
+        print("ADDING: ", record['id'])
+        try:
+            curr.execute(add_parentPostDetail, record)
+        except:
+            print("ERROR ADDING", record['id'])
     cnx.commit()
     curr.close()
 
