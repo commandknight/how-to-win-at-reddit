@@ -1,5 +1,8 @@
 import mysql.connector
 
+# conda install -c https://conda.anaconda.org/anaconda mysql-connector-python
+
+
 config = {
     'user': 'jeet',
     'password': 'paper2mate',
