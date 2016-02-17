@@ -16,7 +16,6 @@ import time
 
 import praw
 
-import mysql_manager
 import sql_manager
 
 
@@ -63,6 +62,7 @@ def process_parent_data_pipeline():
         if temp is not None:
             list_of_dicts.append(temp)
         x += 1
+    import mysql_manager
     mysql_manager.insert_parentdetails_BIG(list_of_dicts)
     print("--- %s seconds ---" % (time.time() - start_time))
     mysql_manager.close_connection()
