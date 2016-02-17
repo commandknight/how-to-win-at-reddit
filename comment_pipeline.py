@@ -10,7 +10,6 @@ name: get_children_commentsIDs()
 
 import sql_manager
 #import parent_post_pipeline
-import time
 
 def process_child_comments_pipeline(parentPost_id, db_path=None, time_limit=60):
     """
