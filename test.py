@@ -1,7 +1,7 @@
 import mysql.connector
 
 config = {
-    'user': 'commandknight',
+    'user': 'jeet',
     'password': 'paper2mate',
     'host': 'cs175redditproject.cxayrrely1fe.us-west-2.rds.amazonaws.com',
     'database': 'cs175reddit',
