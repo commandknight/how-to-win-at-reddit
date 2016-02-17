@@ -25,7 +25,7 @@ def get_unique_parent_ids():
     """
     conn = sqlite3.connect(jeet_path)
     curr = conn.cursor()
-    curr.execute('SELECT DISTINCT link_id,subreddit FROM May2015 LIMIT 100')
+    curr.execute('SELECT DISTINCT link_id,subreddit FROM May2015 LIMIT 1')
     return curr.fetchall()
 
 
@@ -59,6 +59,7 @@ def create_parentPostDetail_table():
           "subreddit TEXT NOT NULL,title TEXT NOT NULL," \
           "score INTEGER,author TEXT NOT NULL," \
           "childrenComments BLOB);"
+    print(create_table_sql)
     result = conn.execute(create_table_sql)
     return result
 

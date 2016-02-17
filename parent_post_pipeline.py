@@ -16,6 +16,7 @@ import time
 
 import praw
 
+import mysql_manager
 import sql_manager
 
 
@@ -37,7 +38,8 @@ def get_parentpost_dict(parentPost):
 
 
 def process_parentPostID(parent_id):
-    sql_manager.insert_parent_dict_into_parentPostDetail(parent_id, get_parentpost_dict(parent_id))
+    mysql_manager.insert_parent_dict_into_parentPostDetail(parent_id, get_parentpost_dict(parent_id))
+
 
 
 def process_parent_data_pipeline():
@@ -50,3 +52,4 @@ def process_parent_data_pipeline():
         process_parentPostID(parent_id)
         x += 1
     print("--- %s seconds ---" % (time.time() - start_time))
+    mysql_manager.close_connection()
