@@ -73,7 +73,7 @@ def remove_chars(text):
     text = re.sub('#[()\'",]', '',text)
     return text
 
-
+#comment
 
 def clean_parentPost_table_pipeline():
     '''
