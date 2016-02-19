@@ -8,6 +8,7 @@ Jeet Nagda, Timothie Fujita, Jocelyne Perez
 import sqlite3
 jeet_path = '/Users/jnagda/Documents/Reddit_Comments/database.sqlite'
 timothie_path = 'C:/Users/Timothie/Desktop/reddit-comments-may-2015/database.sqlite'
+timothie_desktop = 'E:/Downloads/reddit-comments-may-2015/database.sqlite'
 conn = None
 
 def open_db_connection(path):
@@ -28,12 +29,12 @@ def get_unique_parent_ids():
     curr.execute('SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' LIMIT 500 OFFSET 3060')
     return curr.fetchall()
 
-def perform_query(query):
-    conn = sqlite3.connect(timothie_path)
+
+def perform_query(path, query):
+    conn = sqlite3.connect(path)
     c = conn.cursor()
     c.execute(query)
-    result = c.fetchall()
-    return result
+    return c.fetchall()
 
 
 def get_test_data(path):
