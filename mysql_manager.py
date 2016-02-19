@@ -25,6 +25,12 @@ def print_all_testTable():
     curr.close()
 
 
+def perform_query(query):
+    curr = cnx.cursor()
+    curr.execute(query)
+    return curr
+
+
 """ DEPRECATED: NOT USING THIS FUNCTION, USE insert_parentdetails_BIG(list_of_dicts) """
 def insert_parent_dict_into_parentPostDetail(parent_id, parent_info):
     if parent_info is None: return
