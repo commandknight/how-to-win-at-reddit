@@ -77,18 +77,17 @@ def remove_chars(text):
 
 def clean_parentPost_table_pipeline():
     '''
-    For every parentPost, delete any comment that is not in english
-    or is [DELETED]
+    For every parentPost, delete any post that is [removed] or [deleted]
+    comment that is not in english or is [DELETED]
     '''
     c = conn.cursor()
-    c.execute('SELECT childrenComments FROM ParentPostDetails LIMIT 10')
+    c.execute('SELECT selftext FROM ParentPostDetails LIMIT 10')
     
     for text in c.fetchall():
-        text = json.loads(text[0])
+        #text = json.loads(text[0])
         print(text)
-        # if(text == ["[DELETED]"] or text == "[removed]"):
-        #     print('delted')
-        #   #  c.execute('DELETE FROM ParentPostDetails WHERE childrenComments == ')
-        # else:
-        #     print(is_english(text))
+        if(text == "[deleted]" or text == "[removed]"):
+             print('deleted')
+        else:
+             print(is_english(text))
         
