@@ -15,6 +15,13 @@ add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
                         "VALUES (%(id)s, %(url)s, %(timecreated)s, %(subreddit_id)s, %(subreddit)s, %(title)s, %(score)s, %(author)s, %(selftext)s)")
 
 
+update_parentPost_child_ids = ("""
+                                UPDATE ParentPostDetails
+                                SET childrenComments=%s
+                                WHERE parentPost_id=%s
+                                """)
+
+
 # DEBUG FUNCTION DELETE ME LATER
 def print_all_testTable():
     curr = cnx.cursor()
@@ -28,7 +35,18 @@ def print_all_testTable():
 def perform_query(query):
     curr = cnx.cursor()
     curr.execute(query)
-    return curr
+    results = curr.fetchall()
+    return results
+
+
+def update_parentPost(child_ids, parentPost_id):
+    curr = cnx.cursor()
+    try:
+        curr.execute(update_parentPost_child_ids, (child_ids, parentPost_id))
+    except:
+        print("ERROR in updating with children ids: " + str(curr.statement))
+    cnx.commit()
+    curr.close()
 
 
 """ DEPRECATED: NOT USING THIS FUNCTION, USE insert_parentdetails_BIG(list_of_dicts) """

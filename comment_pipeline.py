@@ -10,6 +10,7 @@ name: get_children_commentsIDs()
 
 import mysql_manager
 import sql_manager
+import serialize_comments
 
 def process_child_comments_pipeline(parentPost_id, comment_db_path=None, time_limit=180):
     """
@@ -17,13 +18,12 @@ def process_child_comments_pipeline(parentPost_id, comment_db_path=None, time_li
     :param parentPost_id: required - Parent post ID to be searched
     :param comment_db_path: optional - db path for search, will default to Timothie's machine
     :param time_limit: optional - time limit to look for comments in minutes
-    :return: list of children comment IDs within time limit
+    :return: nothing
     """
     parent_db_connection = mysql_manager
     children_list = get_children_commentIDs(comment_db_path, parent_db_connection, parentPost_id, time_limit)
+    parent_update(parent_db_connection, parentPost_id, children_list)
     parent_db_connection.close_connection()
-
-    return children_list
 
 
 def get_children_commentIDs(comment_path, parent_connect, parentPost_id, time_limit):
@@ -60,6 +60,19 @@ def get_children_commentIDs(comment_path, parent_connect, parentPost_id, time_li
     return children_ids
 
 
+def parent_update(parent_connect, parentPost_id, children_ids):
+    """
+    Update given parentPost with its serialized list of children_ids
+    :param parent_connect: connection to mysql with parent post information
+    :param parentPost_id: id of parent post to update
+    :param children_ids: list of children ids
+    :return: none
+    """
+    sl = serialize_comments
+    serialized_children = sl.serialize_list(children_ids)
+    parent_connect.update_parentPost(serialized_children, parentPost_id)
+
+
 def query_comment_db(db_path, query):
     """
     Prepare the db for search, if not
@@ -71,14 +84,23 @@ def query_comment_db(db_path, query):
     reddit_db = sql_manager
 
     if db_path is None:
-        db_path = reddit_db.timothie_desktop
+        db_path = reddit_db.timothie_path
 
     query_results = reddit_db.perform_query(db_path, query)
     return query_results
 
 
 if __name__ == '__main__':
-    process_child_comments_pipeline('t3_34gitq')
+    q = ('SELECT parentPost_id, title FROM ParentPostDetails LIMIT 10')
+    my = mysql_manager
+    q_results = my.perform_query(q)
+    #my.close_connection()
+
+    for x,y in q_results:
+        print(x + " | " + y)
+        process_child_comments_pipeline(x)
+    #process_child_comments_pipeline('t3_34gitq')
+    #process_child_comments_pipeline('t3_10v5wy')
     #process_child_comments_pipeline('t3_10v5wy')
     #res = mysql_manager.perform_query('SELECT timecreated_utc FROM ParentPostDetails WHERE parentPost_id = \'t3_36i6nn\'')
     #print(res)
