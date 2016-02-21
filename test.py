@@ -14,7 +14,7 @@ config = {
 cnx = mysql.connector.connect(**config)
 cursor = cnx.cursor()
 
-query = ("SELECT * FROM testTable")
+query = ("SELECT childrenComments FROM ParentPostDetails WHERE parentPost_id = \'t3_18h75c\' LIMIT 10")
 
 cursor.execute(query)
 

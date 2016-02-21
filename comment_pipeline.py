@@ -9,8 +9,9 @@ name: get_children_commentsIDs()
 """
 
 import mysql_manager
-import sql_manager
 import serialize_comments
+import sql_manager
+
 
 def process_child_comments_pipeline(parentPost_id, comment_db_path=None, time_limit=180):
     """
@@ -20,10 +21,12 @@ def process_child_comments_pipeline(parentPost_id, comment_db_path=None, time_li
     :param time_limit: optional - time limit to look for comments in minutes
     :return: nothing
     """
-    parent_db_connection = mysql_manager
+    # parent_db_connection = mysql_manager
+    parent_db_connection = None
     children_list = get_children_commentIDs(comment_db_path, parent_db_connection, parentPost_id, time_limit)
+    print(children_list)
     parent_update(parent_db_connection, parentPost_id, children_list)
-    parent_db_connection.close_connection()
+    #parent_db_connection.close_connection()
 
 
 def get_children_commentIDs(comment_path, parent_connect, parentPost_id, time_limit):
@@ -38,25 +41,20 @@ def get_children_commentIDs(comment_path, parent_connect, parentPost_id, time_li
     children_ids = []
     parent_post_time = 0
     time_limit_epoch = time_limit * 60
-
     parent_query = ('SELECT parentPost_id, timecreated_utc FROM ParentPostDetails WHERE parentPost_id = \'', parentPost_id, '\'')
     children_query = ('SELECT id, parent_id, link_id, created_utc FROM May2015 WHERE link_id = \'', parentPost_id, '\'')
     parent_query_string = ''.join(parent_query)
     children_query_string = ''.join(children_query)
-
-    parent_post_info = parent_connect.perform_query(parent_query_string)
+    parent_post_info = mysql_manager.perform_query(parent_query_string)
     children = query_comment_db(comment_path, children_query_string)
-
     for(parentPost_id, timecreated_utc) in parent_post_info:
         parent_post_time = int(float(timecreated_utc))
-
     cutoff_time_limit = parent_post_time + time_limit_epoch
-
     for x,y,z,a in children:
-        if a >= parent_post_time and a <= cutoff_time_limit:
-            children_ids.append(x)
-            print(x, y, z)
-
+        children_ids.append(x)
+        # if a >= parent_post_time and a <= cutoff_time_limit:
+        #     children_ids.append(x)
+        #     print(x, y, z)
     return children_ids
 
 
@@ -70,7 +68,7 @@ def parent_update(parent_connect, parentPost_id, children_ids):
     """
     sl = serialize_comments
     serialized_children = sl.serialize_list(children_ids)
-    parent_connect.update_parentPost(serialized_children, parentPost_id)
+    mysql_manager.update_parentPost(serialized_children, parentPost_id)
 
 
 def query_comment_db(db_path, query):
@@ -91,9 +89,9 @@ def query_comment_db(db_path, query):
 
 
 if __name__ == '__main__':
-    q = ('SELECT parentPost_id, title FROM ParentPostDetails LIMIT 10')
-    my = mysql_manager
-    q_results = my.perform_query(q)
+    q = ('SELECT parentPost_id, title FROM ParentPostDetails LIMIT 20')
+    # my = mysql_manager
+    q_results = mysql_manager.perform_query(q)
     #my.close_connection()
 
     for x,y in q_results:

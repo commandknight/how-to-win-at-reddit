@@ -16,4 +16,4 @@ def deserialize_list(string):
     :param string:
     :return list:
     '''
-    return json.loads(string)
+    return json.loads(string.decode('latin-1'))

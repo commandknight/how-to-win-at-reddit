@@ -9,7 +9,10 @@ import sqlite3
 jeet_path = '/Users/jnagda/Documents/Reddit_Comments/database.sqlite'
 timothie_path = 'C:/Users/Timothie/Desktop/reddit-comments-may-2015/database.sqlite'
 timothie_desktop = 'E:/Downloads/reddit-comments-may-2015/database.sqlite'
-conn = None
+conn = sqlite3.connect(jeet_path)
+
+
+# conn = None
 
 def open_db_connection(path):
     """
@@ -31,7 +34,8 @@ def get_unique_parent_ids():
 
 
 def perform_query(path, query):
-    conn = sqlite3.connect(path)
+    # conn = sqlite3.connect(path)
+    conn = sqlite3.connect(jeet_path)
     c = conn.cursor()
     c.execute(query)
     return c.fetchall()
