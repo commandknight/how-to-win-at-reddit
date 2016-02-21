@@ -52,17 +52,14 @@ def is_english(text):
     the language is in. Returns True if it's in english;
     False otherwise
     '''    
-    ##gs = goslate.Goslate()
-    ##language_id = gs.detect(text)
-    print(text)
-    language_id = detect(text);
+    language_id = detect(text)
     if language_id == 'en':
         return True
     return False
 
 
 
-def remove_chars(text):
+def remove_chars(mystring):
     '''
     Removes unecesary characters so that the function
     is_english(text) can run correctly without being confused
@@ -70,8 +67,8 @@ def remove_chars(text):
     Note: this will not be used when bagging the text
     '''
     # need to figure out which chars we will remove
-    text = re.sub('#[()\'",]', '',text)
-    return text
+    re.sub('[^A-Za-z0-9]+', '', mystring)
+    return mystring
 
 #comment
 
@@ -82,12 +79,15 @@ def clean_parentPost_table_pipeline():
     '''
     c = conn.cursor()
     c.execute('SELECT selftext FROM ParentPostDetails LIMIT 10')
-    
+
     for text in c.fetchall():
-        #text = json.loads(text[0])
-        print(text)
+        text = text[0]
         if(text == "[deleted]" or text == "[removed]"):
-             print('deleted')
+            print('deleted') #not deleting from DB yet, but will once all files are up and running
+        elif (text==""):
+            print("check to see that other fields are filled in")
         else:
-             print(is_english(text))
+            print(is_english(text))
         
+if __name__ == '__main__':
+    clean_parentPost_table_pipeline()
