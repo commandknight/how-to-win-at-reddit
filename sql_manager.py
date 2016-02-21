@@ -9,6 +9,7 @@ import sqlite3
 jeet_path = '/Users/jnagda/Documents/Reddit_Comments/database.sqlite'
 timothie_path = 'C:/Users/Timothie/Desktop/reddit-comments-may-2015/database.sqlite'
 timothie_desktop = 'E:/Downloads/reddit-comments-may-2015/database.sqlite'
+joc_path =  '/Users/Jocelyne/Desktop/CS175/Reddit_Comments/database.sqlite'
 conn = None
 
 def open_db_connection(path):
@@ -17,6 +18,7 @@ def open_db_connection(path):
     :param path: Path of local db
     """
     conn = sqlite3.connect(path)
+    return conn
 
 
 def get_unique_parent_ids():

@@ -10,27 +10,15 @@
 
 # Make sure to pip install all packages if you're going to run this module.
 
-import goslate
 import sqlite3
 import re
 from langdetect import detect
-import mysql.connector
-import json
+import mysql_manager
 
-config = {
-    'user': 'jeet',
-    'password': 'paper2mate',
-    'host': 'cs175redditproject.cxayrrely1fe.us-west-2.rds.amazonaws.com',
-    'database': 'cs175reddit',
-    'raise_on_warnings': True,
-}
 
+config = mysql_manager.config
+joc_path = '/Users/Jocelyne/Desktop/CS175/Reddit_Comments/database.sqlite'
 conn = mysql.connector.connect(**config)
-
-# Make data global
-#joc_path = '/Users/Jocelyne/Desktop/CS175/Reddit_Comments/database.sqlite'
-#conn = sqlite3.connect(joc_path)
-
 
 def get_unique_parent_ids():
     '''
@@ -88,6 +76,12 @@ def clean_parentPost_table_pipeline():
             print("check to see that other fields are filled in")
         else:
             print(is_english(text))
+
+
+
         
 if __name__ == '__main__':
-    clean_parentPost_table_pipeline()
+    print("Beggining clean_parentPost_table_pipeline...\n\n")
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM ParentPostDetails")
+    print(c.fetchone())
