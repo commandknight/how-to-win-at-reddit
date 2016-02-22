@@ -45,7 +45,13 @@ def is_english(text):
         return True
     return False
 
-
+def get_language(text):
+    '''
+    :param text:
+    :return:
+    '''
+    language_id = detect(text)
+    return language_id
 
 def remove_chars(mystring):
     '''
