@@ -1,4 +1,5 @@
 import mysql.connector
+import serialize_comments
 
 config = {
     'user': 'jeet',
@@ -17,8 +18,8 @@ add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
 
 update_parentPost_child_ids = ("""
                                 UPDATE ParentPostDetails
-                                SET childrenComments=%s
-                                WHERE parentPost_id=%s
+                                SET childrenComments = %s
+                                WHERE parentPost_id = %s
                                 """)
 
 
@@ -32,21 +33,27 @@ def print_all_testTable():
     curr.close()
 
 
-def perform_query(query):
+def create_cursor():
     curr = cnx.cursor()
+    return curr
+
+
+def perform_query(curr, query):
     curr.execute(query)
     results = curr.fetchall()
     return results
 
 
-def update_parentPost(child_ids, parentPost_id):
-    curr = cnx.cursor()
+def update_parentPost(curr, child_ids, parentPost_id):
+
+    serialized_children = serialize_comments.serialize_list(child_ids)
     try:
-        curr.execute(update_parentPost_child_ids, (child_ids, parentPost_id))
+        curr.execute(update_parentPost_child_ids, (serialized_children, parentPost_id))
+        cnx.commit()
     except:
-        print("ERROR in updating with children ids: " + str(curr.statement))
-    cnx.commit()
-    curr.close()
+        cnx.rollback()
+        print("error updating parent post with children ids: ")
+        print(str(curr.statement))
 
 
 """ DEPRECATED: NOT USING THIS FUNCTION, USE insert_parentdetails_BIG(list_of_dicts) """
@@ -87,5 +94,6 @@ def insert_parentdetails_BIG(list_of_dicts):
 
 
 # Function to close database connection
-def close_connection():
+def close_connection(curr):
+    curr.close()
     cnx.close()

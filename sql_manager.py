@@ -10,7 +10,7 @@ jeet_path = '/Users/jnagda/Documents/Reddit_Comments/database.sqlite'
 timothie_path = 'C:/Users/Timothie/Desktop/reddit-comments-may-2015/database.sqlite'
 timothie_desktop = 'E:/Downloads/reddit-comments-may-2015/database.sqlite'
 joc_path =  '/Users/Jocelyne/Desktop/CS175/Reddit_Comments/database.sqlite'
-conn = None
+
 
 def open_db_connection(path):
     """
@@ -32,8 +32,7 @@ def get_unique_parent_ids():
     return curr.fetchall()
 
 
-def perform_query(path, query):
-    conn = sqlite3.connect(path)
+def perform_query(conn, query):
     c = conn.cursor()
     c.execute(query)
     return c.fetchall()
@@ -71,6 +70,7 @@ def fill_parentPostDetail_with_test_data():
     TEST Function to insert 2 dummy records into ParentPostDetail table
     :return: null
     """
+    conn = sqlite3.connect(jeet_path)
     fd = open('sql_scripts/fakedata_parentPostDetail.sql','r')
     raw_text = fd.read()
     fd.close()
@@ -104,7 +104,7 @@ def print_test():
         print(x)
 
 
-def close_db_connection():
+def close_db_connection(conn):
     """
     function to close DB connection
     """
