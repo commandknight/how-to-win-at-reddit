@@ -1,21 +1,18 @@
-import mysql_manager
-import sql_manager
-
+from text_pipeline import mysql_manager
 from text_pipeline import serialize_comments
+from text_pipeline import sql_manager
 
-sql_statement = "SELECT parentPost_id,childrenComments,score FROM ParentPostDetails LIMIT 20"
+sql_statement = "SELECT parentPost_id,childrenComments,score,url,selftext FROM ParentPostDetails LIMIT 20"
 
-sql_statement_children = "SELECT body FROM May2015 WHERE id = "
+sql_statement_children = "SELECT body,author FROM May2015 WHERE id = "
 
 
 def get_all_text_from_children_comments(list_of_children):
     big_string = ""
     for child in list_of_children:
         test_string = sql_statement_children + "\'" + child + "\'"
-        # print(test_string)
         t = sql_manager.perform_query('/Users/jnagda/Documents/Reddit_Comments/database.sqlite', test_string)
-        # print(t[0][0])
-        big_string += str(t[0][0])
+        big_string = big_string + str(t[0][0]) + str(t[0][1])
     return big_string
 
 
@@ -93,16 +90,20 @@ if __name__ == '__main__':
     train_targets = []
     test_data = []
     test_targets = []
-    for id, comments, score in q_results[:10]:
+    for (id, comments, score, url, selftext) in q_results[:10]:
         list_of_children = serialize_comments.deserialize_list(comments)
         # print(list_of_children)
         big_string = get_all_text_from_children_comments(list_of_children)
+        if url is not None:
+            big_string += url
+        if selftext is not None:
+            big_string += selftext
         train_data.append(big_string)
         if score > 100:
             train_targets.append(1)
         else:
             train_targets.append(0)
-    for id, comments, score in q_results[10:]:
+    for (id, comments, score, url, selftext) in q_results[10:]:
         list_of_children = serialize_comments.deserialize_list(comments)
         # print(list_of_children)
         big_string = get_all_text_from_children_comments(list_of_children)
