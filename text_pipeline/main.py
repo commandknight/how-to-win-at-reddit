@@ -5,7 +5,7 @@ Jeet Nagda, Timothie Fujita, Jocelyne Perez
 
 
 # TODO: Create getData file
-import parent_post_pipeline
+from text_pipeline import parent_post_pipeline
 
 # import clean_parentPost_table_pipeline as clean_post
 # import test

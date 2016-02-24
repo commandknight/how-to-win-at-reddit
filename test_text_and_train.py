@@ -1,6 +1,7 @@
 import mysql_manager
-import serialize_comments
 import sql_manager
+
+from text_pipeline import serialize_comments
 
 sql_statement = "SELECT parentPost_id,childrenComments,score FROM ParentPostDetails LIMIT 20"
 

@@ -9,8 +9,9 @@ name: get_children_commentsIDs()
 """
 
 import mysql_manager
-import serialize_comments
 import sql_manager
+
+from text_pipeline import serialize_comments
 
 
 def process_child_comments_pipeline(parentPost_id, comment_db_path=None, time_limit=180):
@@ -89,7 +90,7 @@ def query_comment_db(db_path, query):
 
 
 if __name__ == '__main__':
-    q = ('SELECT parentPost_id, title FROM ParentPostDetails LIMIT 20')
+    q = ('SELECT parentPost_id, title FROM ParentPostDetails LIMIT 2000')
     # my = mysql_manager
     q_results = mysql_manager.perform_query(q)
     #my.close_connection()

@@ -67,7 +67,7 @@ def process_parent_data_pipeline():
     temp = get_parentpost_dict(parent_id)
     if temp is not None:
         list_of_dicts.append(temp)
-    import mysql_manager
+    from text_pipeline import mysql_manager
     mysql_manager.insert_parentdetails_BIG(list_of_dicts)
     print("--- %s seconds ---" % (time.time() - start_time))
     mysql_manager.close_connection()

@@ -10,12 +10,10 @@
 
 # Make sure to pip install all packages if you're going to run this module.
 
-import goslate
-import sqlite3
 import re
-from langdetect import detect
+
 import mysql.connector
-import json
+from langdetect import detect
 
 config = {
     'user': 'jeet',
