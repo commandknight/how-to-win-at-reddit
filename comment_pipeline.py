@@ -10,8 +10,9 @@ name: get_children_commentsIDs()
 import parent_post_pipeline
 import mysql_manager
 import sql_manager
+import time
 
-def process_child_comments_pipeline(parentPost_id, comment_db_path=None, time_limit=300):
+def process_child_comments_pipeline(parentPost_id, comment_db_path=None, time_limit=180):
     """
     Pipeline to start a db connection, find comment_ids within time limit, and return any children comments
     :param parentPost_id: required - Parent post ID to be searched
@@ -53,13 +54,17 @@ def get_children_commentIDs(curr, comment_path, parent_connect, parentPost_id, t
         parent_post_time = int(float(timecreated_utc))
 
     cutoff_time_limit = parent_post_time + time_limit_epoch
+    p_time = time.strftime('%m-%d-%Y %H:%M:%S', time.localtime(parent_post_time))
+    c_time = 0;
 
     for x,y,z,a in children:
-        #print(cutoff_time_limit - a)
         if a < cutoff_time_limit:
             children_ids.append(x)
-            #print(x, y, z, a)
+            c_time = time.strftime('%m-%d-%Y %H:%M:%S', time.localtime(a))
 
+
+    print("Total children: " + str(len(children)) + " | After time cutoff: " + str(len(children_ids)))
+    print("Parent post time: " + str(p_time) + " | Last child within time limit: " + str(c_time))
     return children_ids
 
 
@@ -83,15 +88,16 @@ def query_comment_db(db_path, query):
 
 
 if __name__ == '__main__':
-    """
-    parent_id = 't3_37w2go', 'AskReddit'
+
+    parent_id = 't3_37y5rx', 'AskReddit'
     parent_dict = []
     parent = parent_post_pipeline.get_parentpost_dict(parent_id)
     print(parent)
     parent_dict.append(parent)
     mysql_manager.insert_parentdetails_BIG(parent_dict)
-    """
+    process_child_comments_pipeline('t3_37y5rx')
 
-    #child_ids = process_child_comments_pipeline('t3_37zlq2')
-    child_ids = process_child_comments_pipeline('t3_37w2go')
-
+    #process_child_comments_pipeline('t3_37zlq2')
+    #process_child_comments_pipeline('t3_37w2go')
+    #process_child_comments_pipeline('t3_37zyk6')
+    #process_child_comments_pipeline('t3_37yawp')
