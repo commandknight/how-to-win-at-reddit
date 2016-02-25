@@ -5,7 +5,8 @@ config = {
     'password': 'paper2mate',
     'host': 'cs175redditproject.cxayrrely1fe.us-west-2.rds.amazonaws.com',
     'database': 'cs175reddit',
-    'raise_on_warnings': True,
+    # 'cursorclass' : 'MySQLdb.cursors.SSCursor',
+    'raise_on_warnings': True
 }
 
 cnx = mysql.connector.connect(**config)
@@ -14,32 +15,46 @@ add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
                         "(parentPost_id,url,timecreated_utc,subreddit_id,subreddit,title,score,author,selftext) "
                         "VALUES (%(id)s, %(url)s, %(timecreated)s, %(subreddit_id)s, %(subreddit)s, %(title)s, %(score)s, %(author)s, %(selftext)s)")
 
+update_parentPost_child_ids = "UPDATE ParentPostDetails SET childrenComments=%s WHERE parentPost_id=%s "
 
-update_parentPost_child_ids = ("""
-                                UPDATE ParentPostDetails
-                                SET childrenComments=%s
-                                WHERE parentPost_id=%s
-                                """)
+get_parent_data_sql = "SELECT parentPost_id,childrenComments,score,url,selftext FROM ParentPostDetails LIMIT 1000"
 
 
-# DEBUG FUNCTION DELETE ME LATER
-def print_all_testTable():
-    curr = cnx.cursor()
-    query = ("SELECT * FROM testTable")
-    curr.execute(query)
-    for x in curr:
-        print(x[0])
-    curr.close()
-
-
+# PLEASE DONT USE THIS METHOD, BAD PRACTICE!
 def perform_query(query):
+    """
+    Method to perform RAW Sql Query and return cursor result list
+    :param query: SQL String to execute
+    :return: Cursor.fetchall() result list is returned
+    """
     curr = cnx.cursor()
     curr.execute(query)
-    results = curr.fetchall()
-    return results
+    return curr.fetchall()
+
+
+# TODO: Add Limit clause that is optional?
+def get_parent_post_data(limit_amount):
+    """
+    Method to get the text related features of parent_post_details, including ChildrenID list
+    :return: list from Cursor for all ParentPostDetail records
+    """
+    curr = cnx.cursor()
+    curr.execute(get_parent_data_sql)
+    numrows = curr.rowcount
+    for x in range(0, numrows):
+        row = curr.fetchone()
+        print(row[0])
+    # curr.close()
+    return curr
 
 
 def update_parentPost(child_ids, parentPost_id):
+    """
+    Method to update the ParentPosDetails with list of children IDs stored as a BLOB
+    :param child_ids: list of strings for IDs of children comments
+    :param parentPost_id: id of the record to update in ParentPostDetails
+    :return:
+    """
     curr = cnx.cursor()
     try:
         curr.execute(update_parentPost_child_ids, (child_ids, parentPost_id))
@@ -53,7 +68,6 @@ def update_parentPost(child_ids, parentPost_id):
 def insert_parent_dict_into_parentPostDetail(parent_id, parent_info):
     if parent_info is None: return
     curr = cnx.cursor()
-    # author = '[deleted]' if parent_info['author'] is None else parent_info['author'].name
     parentDict = {
         'author': '[deleted]' if parent_info['author'] is None else parent_info['author'].name,
         'id': parent_id[0],
@@ -72,8 +86,12 @@ def insert_parent_dict_into_parentPostDetail(parent_id, parent_info):
     curr.close()
 
 
-# Function to insert a list of parent post dictionaries into the mysql database ParentPostTable
 def insert_parentdetails_BIG(list_of_dicts):
+    """
+    Function to insert a list of parent post dictionaries into the mysql database ParentPostTable
+    :param list_of_dicts: list of dictionaries for parentPost record to insert
+    :return:
+    """
     curr = cnx.cursor()
     # curr.executemany(add_parentPostDetail,list_of_dics)
     for record in list_of_dicts:
@@ -86,6 +104,9 @@ def insert_parentdetails_BIG(list_of_dicts):
     curr.close()
 
 
-# Function to close database connection
 def close_connection():
+    """
+    Function to close connection to MySQL Database
+    :return: None
+    """
     cnx.close()
