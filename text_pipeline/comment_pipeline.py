@@ -6,6 +6,7 @@ name: process_child_comments_pipeline()
 
 Create a method that given a parent post ID, will get all the children posts up to a time limit X and return array of ids
 name: get_children_commentsIDs()
+
 """
 import time
 
