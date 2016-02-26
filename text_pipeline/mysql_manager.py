@@ -1,5 +1,7 @@
 import mysql.connector
 
+from text_pipeline import serialize_comments as sc
+
 config = {
     'user': 'jeet',
     'password': 'paper2mate',
@@ -19,6 +21,10 @@ update_parentPost_child_ids = "UPDATE ParentPostDetails SET childrenComments=%s 
 
 get_parent_data_sql = "SELECT parentPost_id,childrenComments,score,url,selftext FROM ParentPostDetails LIMIT 1000"
 
+get_parent_created_sql = "SELECT parentPost_id, timecreated_utc FROM ParentPostDetails WHERE parentPost_id = %s"
+
+get_parent_post_ids_sql = "SELECT parentPost_id FROM ParentPostDetails"
+
 
 # PLEASE DONT USE THIS METHOD, BAD PRACTICE!
 def perform_query(query):
@@ -31,6 +37,16 @@ def perform_query(query):
     curr.execute(query)
     return curr.fetchall()
 
+
+def create_cursor():
+    return cnx.cursor()
+
+
+"""
+def perform_query(cursor, query):
+    cursor.execute(query)
+    return cursor.fetchall()
+"""
 
 # TODO: Add Limit clause that is optional?
 def get_parent_post_data(limit_amount):
@@ -48,6 +64,14 @@ def get_parent_post_data(limit_amount):
     return curr
 
 
+def get_parent_post_ids():
+    curr = cnx.cursor()
+    curr.execute(get_parent_post_ids_sql)
+    result = curr.fetchall()
+    curr.close()
+    return result
+
+
 def update_parentPost(child_ids, parentPost_id):
     """
     Method to update the ParentPosDetails with list of children IDs stored as a BLOB
@@ -56,8 +80,9 @@ def update_parentPost(child_ids, parentPost_id):
     :return:
     """
     curr = cnx.cursor()
+    child_ids_serialized = sc.serialize_list(child_ids)
     try:
-        curr.execute(update_parentPost_child_ids, (child_ids, parentPost_id))
+        curr.execute(update_parentPost_child_ids, (child_ids_serialized, parentPost_id))
     except:
         print("ERROR in updating with children ids: " + str(curr.statement))
     cnx.commit()
@@ -93,7 +118,7 @@ def insert_parentdetails_BIG(list_of_dicts):
     :return:
     """
     curr = cnx.cursor()
-    # curr.executemany(add_parentPostDetail,list_of_dics)
+    # curr.executemany(add_parentPostDetail,list_of_dicts)
     for record in list_of_dicts:
         print("ADDING: ", record['id'])
         try:
@@ -102,6 +127,14 @@ def insert_parentdetails_BIG(list_of_dicts):
             print("ERROR ADDING", record['id'])
     cnx.commit()
     curr.close()
+
+
+def get_parent_created_info(parent_id):
+    db_cursor = cnx.cursor()
+    db_cursor.execute(get_parent_created_sql, (parent_id,))
+    result = db_cursor.fetchone()
+    db_cursor.close()
+    return result
 
 
 def close_connection():

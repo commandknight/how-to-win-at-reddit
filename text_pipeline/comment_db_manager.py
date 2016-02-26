@@ -7,6 +7,8 @@ conn = sqlite3.connect(jeet_path)
 
 sql_statement_children = "SELECT body,author FROM May2015 WHERE id = ?"
 
+sql_get_children = 'SELECT id, parent_id, link_id, created_utc FROM May2015 WHERE link_id = ?'
+
 
 def open_db_connection(path):
     """
@@ -25,7 +27,21 @@ def get_children_text_features(comment_id):
     db_curr = conn.cursor()
     db_curr.execute(sql_statement_children, (comment_id,))
     result = db_curr.fetchone()
+    db_curr.close()
     return str(result[0]) + str(result[1])
+
+
+def get_children_comments(parentID):
+    """
+    Function to get all the comments IDs, and created_utc of a given parentID
+    :param parentID: the link_id of the comments to get
+    :return: list of (id,parent_id,link_id,created_utc)
+    """
+    db_curr = conn.cursor()
+    db_curr.execute(sql_get_children, (parentID,))
+    result = db_curr.fetchall()
+    db_curr.close()
+    return result
 
 
 def get_unique_parent_ids():
