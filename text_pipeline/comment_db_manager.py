@@ -3,12 +3,13 @@ import sqlite3
 jeet_path = '/Users/jnagda/Documents/Reddit_Comments/database.sqlite'
 timothie_path = 'C:/Users/Timothie/Desktop/reddit-comments-may-2015/database.sqlite'
 timothie_desktop = 'E:/Downloads/reddit-comments-may-2015/database.sqlite'
-conn = sqlite3.connect(jeet_path)
+conn = sqlite3.connect(timothie_path)
 
 sql_statement_children = "SELECT body,author FROM May2015 WHERE id = ?"
 
 sql_get_children = 'SELECT id, parent_id, link_id, created_utc FROM May2015 WHERE link_id = ?'
 
+sql_get_child = 'SELECT id, created_utc FROM May2015 WHERE id = ?'
 
 def open_db_connection(path):
     """
@@ -16,6 +17,7 @@ def open_db_connection(path):
     :param path: Path of local db
     """
     conn = sqlite3.connect(path)
+    return conn
 
 
 def get_children_text_features(comment_id):
@@ -44,15 +46,40 @@ def get_children_comments(parentID):
     return result
 
 
+def get_children_comments_timed(parent_created_time, children_ids, time_limit):
+    """
+    Given list of children, prune children comments which do not fit within timeline
+    :param parent_created_time: Time when parent post was created in epoch time (seconds)
+    :param children_ids: List of children IDs
+    :param time_limit: Time limit from parent post time in MINUTES
+    :return: Return children ids posted within time limit
+    """
+    pruned_children = []
+    cutoff_time = parent_created_time + (time_limit * 60)
+    db_curr = conn.cursor()
+
+    for x in children_ids:
+        result = db_curr.execute(sql_get_child, (x, ))
+
+        for c_id, time in result:
+            if parent_created_time <= time <= cutoff_time:
+                pruned_children.append(c_id)
+
+    db_curr.close()
+    return pruned_children
+
+
 def get_unique_parent_ids():
     """
     Function that returns list of unique link_IDs
     :return: list of tuples (link_ids {string},subreddit {string})
     """
-    conn = sqlite3.connect(jeet_path)
+    conn = sqlite3.connect(timothie_path)
     curr = conn.cursor()
+    print("getting ids")
     curr.execute(
-        'SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' AND link_id = parent_id LIMIT 500 OFFSET 4060')
+        'SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' AND link_id = parent_id LIMIT 500 OFFSET 6060')
+    print("got ids")
     return curr.fetchall()
 
 
@@ -82,3 +109,11 @@ def close_db_connection():
     :return: None
     """
     conn.close()
+
+
+if __name__ == '__main__':
+    parent_created_time = 1433128443.0
+    children_ids = ["crray9e", "crr6j18", "crr7m38", "crr3g4m", "crr8ap7", "crr3nif", "crr8kvz", "crra0y9"]
+    time_limit = 180
+    c_ids = get_children_comments_timed(parent_created_time, children_ids, time_limit)
+    print(c_ids)
