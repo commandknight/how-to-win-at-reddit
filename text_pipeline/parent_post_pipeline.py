@@ -12,6 +12,7 @@ Create a pipeline processing method: 1 - calls get_all_parentpost_ids,
  2- for each id calls get_parentpost_json, 3- inserts each json data into a new sqlite table
 name: process_parent_data_pipeline()
 """
+
 import time
 
 import praw
