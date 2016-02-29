@@ -11,6 +11,15 @@ config = {
     'raise_on_warnings': True
 }
 
+"""
+config = {
+    'user': 'root',
+    'password': 'paper2mate',
+    'host': 'localhost',
+    'database': 'cs175reddit',
+    'raise_on_warnings': True
+}
+"""
 cnx = mysql.connector.connect(**config)
 
 add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
@@ -19,7 +28,7 @@ add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
 
 update_parentPost_child_ids = "UPDATE ParentPostDetails SET childrenComments=%s WHERE parentPost_id=%s "
 
-get_parent_data_sql = "SELECT parentPost_id,childrenComments,score,url,selftext FROM ParentPostDetails LIMIT 1000"
+get_parent_data_sql = "SELECT parentPost_id,childrenComments,score,url,selftext FROM ParentPostDetails"
 
 get_parent_created_sql = "SELECT parentPost_id, timecreated_utc FROM ParentPostDetails WHERE parentPost_id = %s"
 
@@ -49,19 +58,22 @@ def perform_query(cursor, query):
 """
 
 # TODO: Add Limit clause that is optional?
-def get_parent_post_data(limit_amount):
+def get_parent_post_data():
     """
     Method to get the text related features of parent_post_details, including ChildrenID list
+    NOTE, this method may hang, in that case, run again? Jeet is working on more stable
     :return: list from Cursor for all ParentPostDetail records
     """
     curr = cnx.cursor()
     curr.execute(get_parent_data_sql)
-    numrows = curr.rowcount
-    for x in range(0, numrows):
-        row = curr.fetchone()
-        print(row[0])
-    # curr.close()
-    return curr
+    result = []
+    x = 0
+    for y in curr:
+        print("ITER", x)
+        result.append(y)
+        x += 1
+    curr.close()
+    return result
 
 
 def get_parent_post_ids():

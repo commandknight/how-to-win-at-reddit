@@ -97,8 +97,8 @@ if __name__ == '__main__':
     parent_dict.append(parent)
     mysql_manager.insert_parentdetails_BIG(parent_dict)
     process_child_comments_pipeline('t3_37y5rx')
-
+    # t3_37w2go
     # process_child_comments_pipeline('t3_37zlq2')
-    # process_child_comments_pipeline('t3_37w2go')
+    # process_child_comments_pipeline('t3_37zlq2')
     # process_child_comments_pipeline('t3_37zyk6')
     # process_child_comments_pipeline('t3_37yawp')

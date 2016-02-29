@@ -52,7 +52,7 @@ def get_unique_parent_ids():
     conn = sqlite3.connect(jeet_path)
     curr = conn.cursor()
     curr.execute(
-        'SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' AND link_id = parent_id LIMIT 500 OFFSET 3060')
+        'SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' AND link_id = parent_id LIMIT 500 OFFSET 4060')
     return curr.fetchall()
 
 

@@ -16,6 +16,8 @@ import time
 
 import praw
 
+from text_pipeline import comment_db_manager
+
 
 def truncate_identifier_from_id(id):
     return id[3:]
@@ -55,19 +57,14 @@ def process_parent_data_pipeline():
     start_time = time.time()
     x = 0
     list_of_dicts = []
-    """
-    for parent_id in sql_manager.get_unique_parent_ids():
+    for parent_id in comment_db_manager.get_unique_parent_ids():
         print("GETTING:", x, parent_id)
         temp = get_parentpost_dict(parent_id)
         if temp is not None:
             list_of_dicts.append(temp)
         x += 1
-    """
-    parent_id = 't3_2lcfzp'
-    temp = get_parentpost_dict(parent_id)
-    if temp is not None:
-        list_of_dicts.append(temp)
     from text_pipeline import mysql_manager
     mysql_manager.insert_parentdetails_BIG(list_of_dicts)
     print("--- %s seconds ---" % (time.time() - start_time))
+    comment_db_manager.close_db_connection()
     mysql_manager.close_connection()
