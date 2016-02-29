@@ -2,6 +2,7 @@ import mysql.connector
 
 from text_pipeline import serialize_comments as sc
 
+"""
 config = {
     'user': 'jeet',
     'password': 'paper2mate',
@@ -10,8 +11,8 @@ config = {
     # 'cursorclass' : 'MySQLdb.cursors.SSCursor',
     'raise_on_warnings': True
 }
-
 """
+
 config = {
     'user': 'root',
     'password': 'paper2mate',
@@ -19,7 +20,7 @@ config = {
     'database': 'cs175reddit',
     'raise_on_warnings': True
 }
-"""
+
 cnx = mysql.connector.connect(**config)
 
 add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
@@ -28,7 +29,7 @@ add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
 
 update_parentPost_child_ids = "UPDATE ParentPostDetails SET childrenComments=%s WHERE parentPost_id=%s "
 
-get_parent_data_sql = "SELECT parentPost_id,childrenComments,score,url,selftext FROM ParentPostDetails"
+get_parent_data_sql = "SELECT parentPost_id,childrenComments,score,url,selftext,timecreated_utc FROM ParentPostDetails"
 
 get_parent_created_sql = "SELECT parentPost_id, timecreated_utc FROM ParentPostDetails WHERE parentPost_id = %s"
 
@@ -69,7 +70,7 @@ def get_parent_post_data():
     result = []
     x = 0
     for y in curr:
-        print("ITER", x)
+        # print("ITER", x)
         result.append(y)
         x += 1
     curr.close()

@@ -3,7 +3,7 @@ import sqlite3
 jeet_path = '/Users/jnagda/Documents/Reddit_Comments/database.sqlite'
 timothie_path = 'C:/Users/Timothie/Desktop/reddit-comments-may-2015/database.sqlite'
 timothie_desktop = 'E:/Downloads/reddit-comments-may-2015/database.sqlite'
-conn = sqlite3.connect(timothie_path)
+conn = sqlite3.connect(jeet_path)
 
 sql_statement_children = "SELECT body,author FROM May2015 WHERE id = ?"
 
@@ -74,12 +74,11 @@ def get_unique_parent_ids():
     Function that returns list of unique link_IDs
     :return: list of tuples (link_ids {string},subreddit {string})
     """
-    conn = sqlite3.connect(timothie_path)
+    conn = sqlite3.connect(jeet_path)
     curr = conn.cursor()
     print("getting ids")
     curr.execute(
-        'SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' AND link_id = parent_id LIMIT 500 OFFSET 6060')
-    print("got ids")
+        'SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' AND link_id = parent_id LIMIT 500 OFFSET 5060')
     return curr.fetchall()
 
 
@@ -109,11 +108,3 @@ def close_db_connection():
     :return: None
     """
     conn.close()
-
-
-if __name__ == '__main__':
-    parent_created_time = 1433128443.0
-    children_ids = ["crray9e", "crr6j18", "crr7m38", "crr3g4m", "crr8ap7", "crr3nif", "crr8kvz", "crra0y9"]
-    time_limit = 180
-    c_ids = get_children_comments_timed(parent_created_time, children_ids, time_limit)
-    print(c_ids)
