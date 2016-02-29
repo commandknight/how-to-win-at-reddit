@@ -13,7 +13,6 @@ import time
 from text_pipeline import comment_db_manager
 from text_pipeline import mysql_manager
 
-
 def process_child_comments_pipeline(parentPost_id, time_limit=180):
     """
     Pipeline to start a db connection, find comment_ids within time limit, and return any children comments
