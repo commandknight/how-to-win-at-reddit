@@ -36,7 +36,7 @@ def get_parentpost_dict(parentPost):
             'author': '[deleted]' if parent_info['author'] is None else parent_info['author'].name,
             'id': parentPost[0],
             'url': parent_info['url'],
-            'timecreated': parent_info['created'],
+            'timecreated': parent_info['created_utc'],
             'subreddit_id': parent_info['subreddit_id'],
             'subreddit': parent_info['subreddit'].display_name,
             'title': parent_info['title'],
