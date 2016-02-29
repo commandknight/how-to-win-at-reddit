@@ -61,6 +61,7 @@ def get_children_comments_timed(parent_created_time, children_ids, time_limit):
     for x in children_ids:
         result = db_curr.execute(sql_get_child, (x, ))
 
+        # Only allow comments which fall within the parent post / time limit
         for c_id, time in result:
             if parent_created_time <= time <= cutoff_time:
                 pruned_children.append(c_id)
