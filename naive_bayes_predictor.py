@@ -36,10 +36,9 @@ def get_training_data():
         for comment_id in list_of_comments:
             children_text += cdm.get_children_text_features(comment_id)
         training_data.append(post_text + children_text)
-        print(post_text + children_text)
+        #print(post_text + children_text)
     cdm.close_db_connection()
-    print("Training data collected" + training_data)
-    print("Target data collected" + target_data)
+
     return training_data, target_data
 
 
