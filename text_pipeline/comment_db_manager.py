@@ -3,7 +3,7 @@ import sqlite3
 jeet_path = '/Users/jnagda/Documents/Reddit_Comments/database.sqlite'
 timothie_path = 'C:/Users/Timothie/Desktop/reddit-comments-may-2015/database.sqlite'
 timothie_desktop = 'E:/Downloads/reddit-comments-may-2015/database.sqlite'
-conn = sqlite3.connect(jeet_path)
+conn = sqlite3.connect(timothie_path)
 
 sql_statement_children = "SELECT body,author FROM May2015 WHERE id = ?"
 

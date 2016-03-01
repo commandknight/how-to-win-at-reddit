@@ -15,7 +15,7 @@ config = {
 
 config = {
     'user': 'root',
-    'password': 'paper2mate',
+    'password': 'badgerbutt',
     'host': 'localhost',
     'database': 'cs175reddit',
     'raise_on_warnings': True
@@ -70,7 +70,7 @@ def get_parent_post_data():
     result = []
     x = 0
     for y in curr:
-        # print("ITER", x)
+        print("ITER", x)
         result.append(y)
         x += 1
     curr.close()
