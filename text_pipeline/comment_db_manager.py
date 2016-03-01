@@ -79,7 +79,7 @@ def get_unique_parent_ids():
     curr = conn.cursor()
     print("getting ids")
     curr.execute(
-        'SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' AND link_id = parent_id LIMIT 500 OFFSET 5060')
+        'SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' AND link_id = parent_id LIMIT 500')
     return curr.fetchall()
 
 

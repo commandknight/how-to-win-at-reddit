@@ -12,6 +12,7 @@ Create a pipeline processing method: 1 - calls get_all_parentpost_ids,
  2- for each id calls get_parentpost_json, 3- inserts each json data into a new sqlite table
 name: process_parent_data_pipeline()
 """
+
 import time
 
 import praw
@@ -36,7 +37,7 @@ def get_parentpost_dict(parentPost):
             'author': '[deleted]' if parent_info['author'] is None else parent_info['author'].name,
             'id': parentPost[0],
             'url': parent_info['url'],
-            'timecreated': parent_info['created'],
+            'timecreated': parent_info['created_utc'],
             'subreddit_id': parent_info['subreddit_id'],
             'subreddit': parent_info['subreddit'].display_name,
             'title': parent_info['title'],
