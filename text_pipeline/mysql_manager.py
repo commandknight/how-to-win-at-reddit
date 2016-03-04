@@ -15,7 +15,7 @@ config = {
 
 config = {
     'user': 'root',
-    'password': 'badgerbutt',
+    'password': 'CS122Bsql',
     'host': 'localhost',
     'database': 'cs175reddit',
     'raise_on_warnings': True
