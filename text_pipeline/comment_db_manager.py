@@ -55,7 +55,8 @@ def get_children_comments_timed(parent_created_time, children_ids, time_limit):
     :return: Return children ids posted within time limit
     """
     pruned_children = []
-    cutoff_time = parent_created_time + (time_limit * 60)
+    parent_time = float(parent_created_time)
+    cutoff_time = parent_time + (time_limit * 60)
     db_curr = conn.cursor()
 
     for x in children_ids:
@@ -63,10 +64,12 @@ def get_children_comments_timed(parent_created_time, children_ids, time_limit):
 
         # Only allow comments which fall within the parent post / time limit
         for c_id, time in result:
-            if parent_created_time <= time <= cutoff_time:
+            f_time = float(time)
+            if parent_time <= f_time <= cutoff_time:
                 pruned_children.append(c_id)
 
     db_curr.close()
+
     return pruned_children
 
 
@@ -75,11 +78,11 @@ def get_unique_parent_ids():
     Function that returns list of unique link_IDs
     :return: list of tuples (link_ids {string},subreddit {string})
     """
-    conn = sqlite3.connect(jeet_path)
+    conn = sqlite3.connect(timothie_macbook)
     curr = conn.cursor()
     print("getting ids")
     curr.execute(
-        'SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' AND link_id = parent_id LIMIT 1000 OFFSET 20000') #20,000-30,000
+        'SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' AND link_id = parent_id LIMIT 1000 OFFSET 3000')
     return curr.fetchall()
 
 

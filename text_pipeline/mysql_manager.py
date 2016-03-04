@@ -2,7 +2,7 @@ import mysql.connector
 
 from text_pipeline import serialize_comments as sc
 
-"""
+
 config = {
     'user': 'jeet',
     'password': 'paper2mate',
@@ -15,12 +15,12 @@ config = {
 
 config = {
     'user': 'root',
-    'password': 'CS122Bsql',
+    'password': 'ucirvine',
     'host': 'localhost',
     'database': 'cs175reddit',
     'raise_on_warnings': True
 }
-
+"""
 cnx = mysql.connector.connect(**config)
 
 add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
@@ -70,7 +70,7 @@ def get_parent_post_data():
     result = []
     x = 0
     for y in curr:
-        print("ITER", x)
+        # print("ITER", x)
         result.append(y)
         x += 1
     curr.close()
