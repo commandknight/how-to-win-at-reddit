@@ -2,7 +2,7 @@ import mysql.connector
 
 from text_pipeline import serialize_comments as sc
 
-
+"""
 config = {
     'user': 'jeet',
     'password': 'paper2mate',
@@ -15,12 +15,11 @@ config = {
 
 config = {
     'user': 'root',
-    'password': 'ucirvine',
+    'password': 'paper2mate',
     'host': 'localhost',
     'database': 'cs175reddit',
     'raise_on_warnings': True
 }
-"""
 cnx = mysql.connector.connect(**config)
 
 add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
@@ -58,7 +57,6 @@ def perform_query(cursor, query):
     return cursor.fetchall()
 """
 
-# TODO: Add Limit clause that is optional?
 def get_parent_post_data():
     """
     Method to get the text related features of parent_post_details, including ChildrenID list
@@ -68,11 +66,14 @@ def get_parent_post_data():
     curr = cnx.cursor()
     curr.execute(get_parent_data_sql)
     result = []
-    x = 0
-    for y in curr:
-        # print("ITER", x)
-        result.append(y)
-        x += 1
+    row = curr.fetchone()
+    while row is not None:
+        try:
+            row = curr.fetchone()
+            if row is not None:
+                result.append(row)
+        except:
+            print("ERROR in getting", row)
     curr.close()
     return result
 

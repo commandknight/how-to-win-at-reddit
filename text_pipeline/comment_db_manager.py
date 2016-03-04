@@ -3,7 +3,7 @@ import sqlite3
 jeet_path = '/Users/jnagda/Documents/Reddit_Comments/database.sqlite'
 timothie_path = 'C:/Users/Timothie/Desktop/reddit-comments-may-2015/database.sqlite'
 timothie_desktop = 'E:/Downloads/reddit-comments-may-2015/database.sqlite'
-conn = sqlite3.connect(timothie_path)
+conn = sqlite3.connect(jeet_path)
 
 sql_statement_children = "SELECT body,author FROM May2015 WHERE id = ?"
 
@@ -78,7 +78,7 @@ def get_unique_parent_ids():
     Function that returns list of unique link_IDs
     :return: list of tuples (link_ids {string},subreddit {string})
     """
-    conn = sqlite3.connect(timothie_macbook)
+    conn = sqlite3.connect(jeet_path)
     curr = conn.cursor()
     print("getting ids")
     curr.execute(

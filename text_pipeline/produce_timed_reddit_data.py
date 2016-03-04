@@ -20,7 +20,7 @@ def get_training_data(time_limit=300):
     from text_pipeline import comment_db_manager as cdm
     training_data = []
     target_data = [1 if record[2] > 302 else 0 for record in all_records]
-    print("Length of target: ", len(target_data))
+    # print("Length of target: ", len(target_data)) #DEBUG
     error = 0
     for parentPost_id, childrenComments, score, url, selftext, timecreated_utc in all_records:
         post_text = url + selftext
