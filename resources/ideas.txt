@@ -6,21 +6,25 @@ Ideas that Jeet is thinking about:
 -1, 0 , 1
 with 3 different classifications?
 
+JEETS RESULTS
 
-- Need to create for loop to find the best training for different times
-- Need to create GridSearchCV to find best parameters for each time
-==> This experiment needs to be done for all classifiers
+RandomizedSearchCV took 143.80 seconds for 30 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.772 (std: 0.015)
+Parameters: {'clf__bootstrap': True, 'vect__max_features': 10000, 'clf__max_features': 10, 'clf__max_depth': None, 'clf__min_samples_split': 3, 'clf__n_estimators': 200, 'clf__min_samples_leaf': 1, 'vect__max_df': 1.0, 'tfidf__use_idf': False, 'clf__criterion': 'gini'}
 
+Model with rank: 2
+Mean validation score: 0.739 (std: 0.016)
+Parameters: {'clf__bootstrap': False, 'vect__max_features': 10000, 'clf__max_features': 10, 'clf__max_depth': None, 'clf__min_samples_split': 3, 'clf__n_estimators': 100, 'clf__min_samples_leaf': 3, 'vect__max_df': 0.5, 'tfidf__use_idf': False, 'clf__criterion': 'gini'}
 
-- Need to ask TA about cross entropy scoring?
+Model with rank: 3
+Mean validation score: 0.735 (std: 0.013)
+Parameters: {'clf__bootstrap': False, 'vect__max_features': 10000, 'clf__max_features': 10, 'clf__max_depth': 5, 'clf__min_samples_split': 10, 'clf__n_estimators': 100, 'clf__min_samples_leaf': 1, 'vect__max_df': 0.75, 'tfidf__use_idf': False, 'clf__criterion': 'gini'}
 
-    parameters = {
-        'vect__max_df': (0.5, 0.75, 1.0),
-        #'vect__max_features': (None, 5000, 10000, 50000),
-        'vect__ngram_range': ((1, 1), (1, 2)),  # unigrams or bigrams
-        #'tfidf__use_idf': (True, False),
-        #'tfidf__norm': ('l1', 'l2'),
-        'clf__alpha': (0.00001, 0.000001),
-        'clf__penalty': ('l2', 'elasticnet'),
-        #'clf__n_iter': (10, 50, 80),
-    }
+Model with rank: 4
+Mean validation score: 0.734 (std: 0.024)
+Parameters: {'clf__bootstrap': False, 'vect__max_features': 5000, 'clf__max_features': 10, 'clf__max_depth': 3, 'clf__min_samples_split': 10, 'clf__n_estimators': 100, 'clf__min_samples_leaf': 3, 'vect__max_df': 1.0, 'tfidf__use_idf': False, 'clf__criterion': 'gini'}
+
+Model with rank: 5
+Mean validation score: 0.726 (std: 0.018)
+Parameters: {'clf__bootstrap': True, 'vect__max_features': 10000, 'clf__max_features': 10, 'clf__max_depth': 3, 'clf__min_samples_split': 3, 'clf__n_estimators': 200, 'clf__min_samples_leaf': 10, 'vect__max_df': 1.0, 'tfidf__use_idf': False, 'clf__criterion': 'entropy'}
