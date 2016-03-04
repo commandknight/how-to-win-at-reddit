@@ -1,0 +1,26 @@
+
+
+Ideas that Jeet is thinking about:
+
+- Multi classification problem
+-1, 0 , 1
+with 3 different classifications?
+
+
+- Need to create for loop to find the best training for different times
+- Need to create GridSearchCV to find best parameters for each time
+==> This experiment needs to be done for all classifiers
+
+
+- Need to ask TA about cross entropy scoring?
+
+    parameters = {
+        'vect__max_df': (0.5, 0.75, 1.0),
+        #'vect__max_features': (None, 5000, 10000, 50000),
+        'vect__ngram_range': ((1, 1), (1, 2)),  # unigrams or bigrams
+        #'tfidf__use_idf': (True, False),
+        #'tfidf__norm': ('l1', 'l2'),
+        'clf__alpha': (0.00001, 0.000001),
+        'clf__penalty': ('l2', 'elasticnet'),
+        #'clf__n_iter': (10, 50, 80),
+    }
