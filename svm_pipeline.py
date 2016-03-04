@@ -1,19 +1,13 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from nltk.corpus import stopwords
-
-import text_pipeline.tokenize_text as tokenize
-import random_forest_pipeline as rfp
-from text_pipeline import produce_timed_reddit_data as rd
-
 from sklearn import svm
-from sklearn import datasets
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.cross_validation import cross_val_score
-from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.pipeline import Pipeline
 
-
+from text_pipeline import produce_timed_reddit_data as rd
 
 # we create 40 separable points
 #np.random.seed(0)
