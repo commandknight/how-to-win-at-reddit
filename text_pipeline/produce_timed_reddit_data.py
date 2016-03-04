@@ -37,5 +37,6 @@ def get_training_data(time_limit=300):
                 children_text += cdm.get_children_text_features(comment_id)
         training_data.append(post_text + children_text)
     cdm.close_db_connection()
-    print("Total errors: " + str(error))
+    if error > 0:
+        print("Total errors in getting time_cut_off data: " + str(error))
     return training_data, target_data
