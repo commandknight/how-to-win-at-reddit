@@ -64,10 +64,9 @@ def get_children_commentIDs(parentPost_id, time_limit):
 
 
 def update_all_mysql_parent_posts():
-    print("HELLO WORLD")
+    print("GETTING IDS")
     list_of_ids = mysql_manager.get_parent_post_ids()
-    ##
-    print(len(list_of_ids))
+    print("GOT IDS:" + str(len(list_of_ids)))
     x = 0
     for (parent_id,) in list_of_ids:
         print("PROCESSING: " + parent_id + " ---iter -- " + str(x))
