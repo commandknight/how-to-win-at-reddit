@@ -1,51 +1,65 @@
 """
 This piepline will be the file where we create, train and evaluate the random forest classifiers
 """
+import time
+from operator import itemgetter
+
+import numpy as np
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.grid_search import RandomizedSearchCV
 from sklearn.pipeline import Pipeline
 
-from text_pipeline import serialize_comments as sc
+from text_pipeline import produce_timed_reddit_data as rd
 
 
-def get_training_data():
-    from text_pipeline import mysql_manager
-    all_records = mysql_manager.get_parent_post_data()
-    mysql_manager.close_connection()
-    from text_pipeline import comment_db_manager as cdm
-    training_data = []
-    target_data = [1 if record[2] > 414 else 0 for record in all_records]
-    for parentPost_id, childrenComments, score, url, selftext, timecreated_utc in all_records:
-        # get_text_of_post
-        post_text = url + selftext
-        # get_text_of_children
-        children_text = ""
-        # list_of_comments = select_timecutoff(timecreated_utc,time_limit,sc.deserialize_list(childrenComments))
-        try:
-            list_of_comments = sc.deserialize_list(childrenComments)
-        except:
-            print("ERROR WITH " + parentPost_id)
-        for comment_id in list_of_comments:
-            children_text += cdm.get_children_text_features(comment_id)
-        training_data.append(post_text + children_text)
-    cdm.close_db_connection()
-    return training_data, target_data
+# from time import time
 
 
 def rf_pipeline():
     from sklearn.ensemble import RandomForestClassifier
-    from sklearn.cross_validation import cross_val_score
-    X, y = get_training_data()
+    X, y = rd.get_training_data()
     reddit_clf_randomForest = Pipeline([('vect', CountVectorizer(stop_words=stopwords.words('english'))),
                                         ('tfidf', TfidfTransformer()),
-                                        ('clf', RandomForestClassifier()),
+                                        ('clf', RandomForestClassifier(class_weight='balanced')),
                                         ])
-    scores = cross_val_score(reddit_clf_randomForest, X, y, cv=5, n_jobs=-1, scoring='accuracy')
-    return scores
+    param_grid = {
+        "clf__n_estimators": [100, 200, 300],
+        "clf__max_depth": [3, None],
+        "clf__max_features": [1, 3, 10],
+        # "clf__min_samples_split": [1, 3, 10],
+        # "clf__min_samples_leaf": [1, 3, 10],
+        # "clf__bootstrap": [True, False],
+        'tfidf__use_idf': [True, False],
+        "clf__criterion": ["gini", "entropy"],
+        # 'vect__max_df': [0.5, 0.75, 1.0],
+        # 'vect__max_features': (None, 5000, 10000, 50000)
+    }
+    print("STARTING TO TRAIN")
+    start = time.time()
+    n_iter_search = 5
+    rs_clf = RandomizedSearchCV(reddit_clf_randomForest, param_distributions=param_grid, n_iter=n_iter_search,
+                                n_jobs=-1, verbose=1, cv=3, scoring='roc_auc')
+    rs_clf.fit(X, y)
+    print("RandomizedSearchCV took %.2f seconds for %d candidates"
+          " parameter settings." % ((time.time() - start), n_iter_search))
+    report(rs_clf.grid_scores_)
+    # print("PERCENT OF 0s:",y.count(0)/len(y))
+
+
+def report(grid_scores, n_top=3):
+    top_scores = sorted(grid_scores, key=itemgetter(1), reverse=True)[:n_top]
+    for i, score in enumerate(top_scores):
+        print("Model with rank: {0}".format(i + 1))
+        print("Mean validation score: {0:.3f} (std: {1:.3f})".format(
+            score.mean_validation_score,
+            np.std(score.cv_validation_scores)))
+        print("Parameters: {0}".format(score.parameters))
+        print("")
 
 
 if __name__ == '__main__':
+    start_time = time.time()
     scores = rf_pipeline()
-    print(scores)
-    print(scores.mean())
+    print("--- %s seconds ---" % (time.time() - start_time))
