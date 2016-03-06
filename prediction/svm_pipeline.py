@@ -1,21 +1,24 @@
+from time import time
+
 import matplotlib.pyplot as plt
 import numpy as np
 from nltk.corpus import stopwords
 from sklearn import svm
-from sklearn.cross_validation import cross_val_score
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.grid_search import RandomizedSearchCV
 from sklearn.pipeline import Pipeline
 
+from prediction.reporting import report
 from text_pipeline import produce_timed_reddit_data as rd
+
 
 # we create 40 separable points
 #np.random.seed(0)
 #X = np.r_[np.random.randn(20, 2) - [2, 2], np.random.randn(20, 2) + [2, 2]]
 #Y = [0] * 20 + [1] * 20
 
-print("Fetching data...")
-X, Y = rd.get_training_data()
+
 
 #X = CountVectorizer(stop_words=stopwords.words('english'))
 #iris = datasets.load_iris()
@@ -32,14 +35,32 @@ X, Y = rd.get_training_data()
 def svm_accuracy():
     # cv = CountVectorizer(stop_words=stopwords.words('english'))
     # tfidf = TfidfTransformer()
-
-    print(svm.SVC(kernel='linear',C=0.05))
+    # print(svm.SVC(kernel='linear',C=0.05))
+    print("Fetching data...")
+    X, Y = rd.get_training_data()
+    print("Fetched data...")
     clf_svm = Pipeline([('vect', CountVectorizer(stop_words=stopwords.words('english'))),
                         ('tfidf', TfidfTransformer()),
-                        ('clf', svm.SVC(kernel='linear',C=0.05)),
-                    ])
-    scores = cross_val_score(clf_svm, X, Y, cv=5, n_jobs=-1, scoring='accuracy')
-    return scores
+                        ('clf', svm.SVC(verbose=1, gamma='auto', class_weight='balanced')),
+                        ])
+    # kernals: one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’
+    param_grid = {
+        'tfidf__use_idf': [True, False],
+        'clf__kernel': ['linear', 'poly'],
+        'vect__max_df': [0.5, 0.75, 1.0],
+        'vect__max_features': (None, 5000, 10000, 50000),
+        'clf__shrinking': [True, False],
+        'clf__C': [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2, 1.4, 1.5]
+    }
+    print("STARTING TO TRAIN")
+    start = time()
+    n_iter_search = 40
+    rsvm_clf = RandomizedSearchCV(clf_svm, param_distributions=param_grid, n_iter=n_iter_search,
+                                  n_jobs=-1, verbose=1, cv=5, scoring='roc_auc')
+    rsvm_clf.fit(X, Y)
+    print("RandomizedSearchCV took %.2f seconds for %d candidates"
+          " parameter settings." % ((time() - start), n_iter_search))
+    report(rsvm_clf.grid_scores_, 5)
 
 def svm_pipeline():
     print("Running svm_pipeline")
@@ -99,8 +120,8 @@ def svm_pipeline():
 
 
 if __name__ == '__main__':
-   #svm_accuracy()
-   svm_pipeline()
+    svm_accuracy()
+    # svm_pipeline()
    #for i in range(10):
    #    print(i, X[i])
 

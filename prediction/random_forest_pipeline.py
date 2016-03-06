@@ -2,16 +2,16 @@
 This piepline will be the file where we create, train and evaluate the random forest classifiers
 JEET
 """
-from operator import itemgetter
+
 from time import time
 
-import numpy as np
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.grid_search import RandomizedSearchCV
 from sklearn.pipeline import Pipeline
 
+from prediction.reporting import report
 from text_pipeline import produce_timed_reddit_data as rd
 
 
@@ -49,17 +49,6 @@ def rf_pipeline():
           " parameter settings." % ((time() - start), n_iter_search))
     report(rs_clf.grid_scores_, 5)
     # print("PERCENT OF 0s:",y.count(0)/len(y))
-
-
-def report(grid_scores, n_top=3):
-    top_scores = sorted(grid_scores, key=itemgetter(1), reverse=True)[:n_top]
-    for i, score in enumerate(top_scores):
-        print("Model with rank: {0}".format(i + 1))
-        print("Mean validation score: {0:.3f} (std: {1:.3f})".format(
-            score.mean_validation_score,
-            np.std(score.cv_validation_scores)))
-        print("Parameters: {0}".format(score.parameters))
-        print("")
 
 
 if __name__ == '__main__':
