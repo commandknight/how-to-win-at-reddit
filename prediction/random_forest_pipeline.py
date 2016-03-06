@@ -3,12 +3,16 @@ This piepline will be the file where we create, train and evaluate the random fo
 JEET
 """
 
+from time import time
+
 from nltk.corpus import stopwords
 from sklearn.cross_validation import cross_val_score
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.grid_search import RandomizedSearchCV
 from sklearn.pipeline import Pipeline
 
+from prediction.reporting import report
 from text_pipeline import produce_timed_reddit_data as rd
 
 
@@ -40,15 +44,15 @@ def rf_pipeline():
         'vect__max_df': [0.5, 0.75, 1.0],
         'vect__max_features': (None, 5000, 10000, 50000)
     }
-    # print("STARTING TO TRAIN")
-    # start = time()
-    # n_iter_search = 30
-    # rs_clf = RandomizedSearchCV(reddit_clf_randomForest, param_distributions=param_grid, n_iter=n_iter_search,
-    #                             n_jobs=-1, verbose=1, cv=5, scoring='roc_auc')
-    # rs_clf.fit(X, y)
-    # print("RandomizedSearchCV took %.2f seconds for %d candidates"
-    #       " parameter settings." % ((time() - start), n_iter_search))
-    # report(rs_clf.grid_scores_, 5)
+    print("STARTING TO TRAIN")
+    start = time()
+    n_iter_search = 30
+    rs_clf = RandomizedSearchCV(reddit_clf_randomForest, param_distributions=param_grid, n_iter=n_iter_search,
+                                n_jobs=-1, verbose=1, cv=5, scoring='roc_auc')
+    rs_clf.fit(X, y)
+    print("RandomizedSearchCV took %.2f seconds for %d candidates"
+          " parameter settings." % ((time() - start), n_iter_search))
+    report(rs_clf.grid_scores_, 5)
     # print("PERCENT OF 0s:",y.count(0)/len(y))
 
 
