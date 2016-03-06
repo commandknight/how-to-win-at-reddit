@@ -15,9 +15,6 @@ from sklearn.pipeline import Pipeline
 from prediction.reporting import report
 from text_pipeline import produce_timed_reddit_data as rd
 
-
-# TODO: Comment this code
-
 def rf_pipeline():
     from sklearn.ensemble import RandomForestClassifier
     print("GETTING THE DATA")
