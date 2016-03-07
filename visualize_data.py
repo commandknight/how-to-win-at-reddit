@@ -49,21 +49,21 @@ def histogram_of_languages():
     language_dict = {}
 
     for x in range(2000):
-        print(x)
+        # print(x)
         text = c.fetchone()
         if(text==None or text[0]=='[removed]'or text[0]==['deleted'] or text[0] == '' or text[0].startswith("http") or text[0].startswith(";") or text[0].startswith(":") or text[0].startswith("3")):
             print('skip')
         else:
             text = text[0]
-            print(text)
+            #print(text)
             language_id = clean_parentPost_table_pipeline.get_language(text)
-            print(language_id)
+            #print(language_id)
             if(language_id not in language_dict):
                 language_dict[language_id] = 1
             else:
                 language_dict[language_id] = language_dict.get(language_id) + 1
 
-    print(language_dict)
+    #print(language_dict)
 
     plt.bar(range(len(language_dict)), language_dict.values(), align='center')
     plt.xticks(range(len(language_dict)), language_dict.keys())
@@ -107,10 +107,12 @@ def histogram_document_length():
                 else:
                     document_lengths_dict['500+ words'] = document_lengths_dict.get('500+ words') + 1
 
-    print(document_lengths_dict)
+    #print(document_lengths_dict)
 
     plt.bar(range(len(document_lengths_dict)), document_lengths_dict.values(), align='center')
     plt.xticks(range(len(document_lengths_dict)), document_lengths_dict.keys())
+    plt.title('Document Lengths (in word-count)', loc='center')
+    plt.ylabel('Number of documents')
     plt.show()
 
 
@@ -127,7 +129,7 @@ def histogram_number_of_comments():
         c2.execute("SELECT COUNT(*) FROM May2015 WHERE link_id = '" + link_id + "'")
         comment_count = c2.fetchone()
         comment_count = comment_count[0]
-        print(comment_count)
+        #print(comment_count)
 
         if(comment_count <=10):
             if('0-5 comments' not in counts_dict):
@@ -149,12 +151,14 @@ def histogram_number_of_comments():
 
     plt.bar(range(len(counts_dict)), counts_dict.values(), align='center')
     plt.xticks(range(len(counts_dict)), counts_dict.keys())
+    plt.title('Number of comments', loc='center')
+    plt.ylabel('Number of documents')
     plt.show()
 
 
 
 if __name__ == '__main__':
-    # data_stats()
+    data_stats()
     # histogram_of_languages()
     # removed_comments()
     histogram_number_of_comments()
