@@ -1,11 +1,8 @@
-import numpy as np
 import matplotlib.pyplot as  plt
-import mysql_manager
-import sql_manager
-import clean_parentPost_table_pipeline
-import text_clean_test
 
-
+from text_pipeline import clean_parentPost_table_pipeline
+from text_pipeline import comment_db_manager as sql_manager
+from text_pipeline import mysql_manager
 
 ### create a histogram of the languages in the database
 ### create a histogram of the size of each mainPost
@@ -13,7 +10,7 @@ import text_clean_test
 ###     that one mainPost has
 
 conn = mysql_manager.cnx
-conn_lite = sql_manager.open_db_connection(sql_manager.joc_path)
+conn_lite = sql_manager.conn
 
 
 def removed_comments():
@@ -157,9 +154,8 @@ def histogram_number_of_comments():
 
 
 if __name__ == '__main__':
-   #data_stats()
-   histogram_of_languages()
-  # removed_comments()
-  # histogram_number_of_comments()
-   #histogram_document_length()
-
+    # data_stats()
+    # histogram_of_languages()
+    # removed_comments()
+    histogram_number_of_comments()
+    histogram_document_length()

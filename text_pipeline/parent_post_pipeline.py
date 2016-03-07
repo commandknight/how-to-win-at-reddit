@@ -25,9 +25,11 @@ def truncate_identifier_from_id(id):
 
 
 def get_parentpost_dict(parentPost):
-    user_agent = "PyAI UCI-CS175 0.2"
+    user_agent = "PyAI UCI-CS175 1.5"
     link_id = truncate_identifier_from_id(parentPost[0])
     url_string = 'https://www.reddit.com/r/' + parentPost[1] + '/comments/' + link_id + '/.json'
+    # example string
+    # https://www.reddit.com/r/AskReddit/comments/37y5rx/what_do_you_always_say_yes_to/.json
     # print(url_string) #DEBUG PRINT STATEMENT
     r = praw.Reddit(user_agent=user_agent)
     try:

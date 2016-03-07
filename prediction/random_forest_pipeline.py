@@ -30,7 +30,7 @@ def rf_pipeline():
     print(scores.mean())
     print("--------------------")
     param_grid = {
-        "clf__n_estimators": [100, 200, 300],
+        "clf__n_estimators": [200, 300, 400],
         "clf__max_depth": [3, 5, None],
         "clf__max_features": [1, 3, 10],
         "clf__min_samples_split": [1, 3, 10],
