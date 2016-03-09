@@ -28,7 +28,7 @@ add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
 
 update_parentPost_child_ids = "UPDATE ParentPostDetails SET childrenComments=%s WHERE parentPost_id=%s "
 
-get_parent_data_sql = "SELECT parentPost_id,childrenComments,score,url,selftext,timecreated_utc FROM ParentPostDetails"
+get_parent_data_sql = "SELECT parentPost_id,childrenComments,score,url,selftext,timecreated_utc,subreddit FROM ParentPostDetails"
 
 get_parent_created_sql = "SELECT parentPost_id, timecreated_utc FROM ParentPostDetails WHERE parentPost_id = %s"
 

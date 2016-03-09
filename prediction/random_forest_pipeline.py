@@ -20,6 +20,7 @@ def rf_pipeline(time_limit=300):
     print("GETTING THE DATA")
     print("...")
     X, y = rd.get_training_data(time_limit)
+    # print("PERCENT OF 0s:",y.count(0)/len(y)) # DEBUG
     print("FETCHED THE DATA")
     reddit_clf_randomForest = Pipeline([
         ('vect', CountVectorizer(stop_words=stopwords.words('english'))),
@@ -51,7 +52,6 @@ def rf_pipeline(time_limit=300):
     print("RandomizedSearchCV took %.2f seconds for %d candidates"
           " parameter settings." % ((time() - start), n_iter_search))
     report(rs_clf.grid_scores_, 5)
-    # print("PERCENT OF 0s:",y.count(0)/len(y))
 
 
 if __name__ == '__main__':

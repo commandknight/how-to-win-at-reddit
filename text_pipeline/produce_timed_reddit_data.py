@@ -8,6 +8,19 @@ Product Timed Reddit Data
 
 from text_pipeline import serialize_comments as sc
 
+
+def get_avg_scores_by_subreddit():
+    import csv
+    avg_score_subreddit = {}
+    with open('/Users/jnagda/PycharmProjects/how-to-win-at-reddit/resources/avg_scores_by_subreddit.csv',
+              'r') as csvfile:
+        csvreader = csv.reader(csvfile)
+        next(csvreader, None)
+        for row in csvreader:
+            avg_score_subreddit[row[0]] = float(row[1])
+    return avg_score_subreddit
+
+
 def get_training_data(time_limit=300):
     """
     Categorize all available data for use in all classification pipelines
@@ -19,10 +32,10 @@ def get_training_data(time_limit=300):
     mysql_manager.close_connection()
     from text_pipeline import comment_db_manager as cdm
     training_data = []
-    target_data = [1 if record[2] > 302 else 0 for record in all_records]
-    # print("Length of target: ", len(target_data)) #DEBUG
+    target_data = []
+    avg_score_subreddit = get_avg_scores_by_subreddit()
     error = 0
-    for parentPost_id, childrenComments, score, url, selftext, timecreated_utc in all_records:
+    for parentPost_id, childrenComments, score, url, selftext, timecreated_utc, subreddit in all_records:
         post_text = url + selftext
         children_text = ""
         try:
@@ -36,7 +49,14 @@ def get_training_data(time_limit=300):
             for comment_id in list_of_comments:
                 children_text += cdm.get_children_text_features(comment_id)
         training_data.append(post_text + children_text)
+        target_data.append(1 if float(score) > avg_score_subreddit[subreddit] else 0)
     cdm.close_db_connection()
     if error > 0:
         print("Total errors in getting time_cut_off data: " + str(error))
+    mysql_manager.close_connection()
+    # print("Length of target: ", len(target_data)) #DEBUG
     return training_data, target_data
+
+
+if __name__ == "__main__":
+    test = get_training_data()
