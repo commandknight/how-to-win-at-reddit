@@ -55,4 +55,5 @@ def rf_pipeline(time_limit=300):
 
 
 if __name__ == '__main__':
-    scores = rf_pipeline()
+    print("Random Forest Pipeline")
+    rf_pipeline()
