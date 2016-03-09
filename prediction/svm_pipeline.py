@@ -1,3 +1,7 @@
+"""
+Naive Bayes Pipeline for How to Win at Reddit
+Created by Jocelyne Perez
+"""
 from time import time
 
 import matplotlib.pyplot as plt
@@ -13,40 +17,19 @@ from prediction.reporting import report
 from text_pipeline import produce_timed_reddit_data as rd
 
 
-# we create 40 separable points
-#np.random.seed(0)
-#X = np.r_[np.random.randn(20, 2) - [2, 2], np.random.randn(20, 2) + [2, 2]]
-#Y = [0] * 20 + [1] * 20
-
-
-
-#X = CountVectorizer(stop_words=stopwords.words('english'))
-#iris = datasets.load_iris()
-#X = iris.data[:, [0,2]]
-#Y = iris.target
-
-    # Split into training and test data
-    # Learn and classify on training data
-    # Predict on test data
-    # Calculate MSE on test data
-
-# nltk sentiment analysis utls
-
-def svm_accuracy():
-    # cv = CountVectorizer(stop_words=stopwords.words('english'))
-    # tfidf = TfidfTransformer()
-    # print(svm.SVC(kernel='linear',C=0.05))
-    print("Fetching data...")
-    X, Y = rd.get_training_data()
-    print("Fetched data...")
+def svm_pipeline(time_limit=300):
+    print("GETTING THE DATA")
+    print("...")
+    X, y = rd.get_training_data(time_limit)
+    print("FETCHED THE DATA")
     clf_svm = Pipeline([('vect', CountVectorizer(stop_words=stopwords.words('english'))),
                         ('tfidf', TfidfTransformer()),
                         ('clf', svm.SVC(verbose=1, gamma='auto', class_weight='balanced')),
                         ])
-    # kernals: one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’
+    # kernals: one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’
     param_grid = {
         'tfidf__use_idf': [True, False],
-        'clf__kernel': ['linear', 'poly'],
+        'clf__kernel': ['linear', 'poly', 'rbf', 'sigmoid'],
         'vect__max_df': [0.5, 0.75, 1.0],
         'vect__max_features': (None, 5000, 10000, 50000),
         'clf__shrinking': [True, False],
@@ -57,13 +40,18 @@ def svm_accuracy():
     n_iter_search = 40
     rsvm_clf = RandomizedSearchCV(clf_svm, param_distributions=param_grid, n_iter=n_iter_search,
                                   n_jobs=-1, verbose=1, cv=5, scoring='roc_auc')
-    rsvm_clf.fit(X, Y)
+    rsvm_clf.fit(X, y)
     print("RandomizedSearchCV took %.2f seconds for %d candidates"
           " parameter settings." % ((time() - start), n_iter_search))
     report(rsvm_clf.grid_scores_, 5)
 
-def svm_pipeline():
+
+def svm_pipeline2():
     print("Running svm_pipeline")
+    print("GETTING THE DATA")
+    print("...")
+    X, y = rd.get_training_data()
+    print("FETCHED THE DATA")
     # figure number for plots
     fignum = 1
 
@@ -93,7 +81,7 @@ def svm_pipeline():
 
         plt.scatter(clf.support_vectors_[:, 0], clf.support_vectors_[:, 1], s=80,
                     facecolors='none', zorder=10)
-        plt.scatter(X[:, 0], X[:, 1], c=Y, zorder=10, cmap=plt.cm.Paired)
+        plt.scatter(X[:, 0], X[:, 1], c=y, zorder=10, cmap=plt.cm.Paired)
 
         plt.axis('tight')
         x_min = -4.8
@@ -120,8 +108,5 @@ def svm_pipeline():
 
 
 if __name__ == '__main__':
-    svm_accuracy()
-    # svm_pipeline()
-   #for i in range(10):
-   #    print(i, X[i])
-
+    svm_pipeline()
+    # svm_pipeline2()

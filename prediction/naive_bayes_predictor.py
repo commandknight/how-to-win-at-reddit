@@ -16,10 +16,10 @@ from prediction.reporting import report
 from text_pipeline import produce_timed_reddit_data as rd
 
 
-def bernoulli_nb_pipeline():
+def bernoulli_nb_pipeline(time_limit=300):
     print("GETTING THE DATA")
     print("...")
-    X, y = rd.get_training_data()
+    X, y = rd.get_training_data(time_limit)
     print("FETCHED THE DATA")
     text_bernNB = Pipeline([('vect', CountVectorizer(stop_words=stopwords.words('english'))),
                             ('tfidf', TfidfTransformer()),

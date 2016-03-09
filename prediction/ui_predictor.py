@@ -16,9 +16,9 @@ if __name__ == "__main__":
             flag = False
         elif selection == 2:
             # run SVMPipeline
-            from prediction.svm_pipeline import svm_accuracy
+            from prediction.svm_pipeline import svm_pipeline
 
-            svm_accuracy()
+            svm_pipeline()
             flag = False
         elif selection == 3:
             # Run NaiveBayesPipeline

@@ -1,8 +1,7 @@
 """
-This piepline will be the file where we create, train and evaluate the random forest classifiers
-JEET
+Naive Bayes Pipeline for How to Win at Reddit
+Created by Jeet Nagda
 """
-
 from time import time
 
 from nltk.corpus import stopwords
@@ -15,13 +14,15 @@ from sklearn.pipeline import Pipeline
 from prediction.reporting import report
 from text_pipeline import produce_timed_reddit_data as rd
 
-def rf_pipeline():
+
+def rf_pipeline(time_limit=300):
     from sklearn.ensemble import RandomForestClassifier
     print("GETTING THE DATA")
     print("...")
-    X, y = rd.get_training_data()
+    X, y = rd.get_training_data(time_limit)
     print("FETCHED THE DATA")
-    reddit_clf_randomForest = Pipeline([('vect', CountVectorizer(stop_words=stopwords.words('english'))),
+    reddit_clf_randomForest = Pipeline([
+        ('vect', CountVectorizer(stop_words=stopwords.words('english'))),
                                         ('tfidf', TfidfTransformer()),
                                         ('clf', RandomForestClassifier(class_weight='balanced')),
                                         ])
