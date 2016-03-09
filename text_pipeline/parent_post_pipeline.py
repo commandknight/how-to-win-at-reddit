@@ -71,3 +71,7 @@ def process_parent_data_pipeline():
     print("--- %s seconds ---" % (time.time() - start_time))
     comment_db_manager.close_db_connection()
     mysql_manager.close_connection()
+
+
+if __name__ == "__main__":
+    process_parent_data_pipeline()
