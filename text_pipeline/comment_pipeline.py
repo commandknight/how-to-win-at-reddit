@@ -15,6 +15,7 @@ from text_pipeline import mysql_manager
 from text_pipeline import parent_post_pipeline
 
 
+@DeprecationWarning
 def process_child_comments_pipeline(parentPost_id, comment_db_path=None, time_limit=180):
     """
     Pipeline to start a db connection, find comment_ids within time limit, and return any children comments
@@ -32,6 +33,7 @@ def process_child_comments_pipeline(parentPost_id, comment_db_path=None, time_li
     return children_list
 
 
+@DeprecationWarning
 def get_children_commentIDs(curr, comment_path, parent_connect, parentPost_id, time_limit):
     """
     Get children post IDs made within time_limit from when parentPost_id is made.
@@ -70,6 +72,7 @@ def get_children_commentIDs(curr, comment_path, parent_connect, parentPost_id, t
     return children_ids
 
 
+@DeprecationWarning
 def query_comment_db(db_path, query):
     """
     Prepare the db for search, if not

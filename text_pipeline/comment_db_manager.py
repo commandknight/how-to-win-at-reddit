@@ -86,7 +86,7 @@ def get_unique_parent_ids():
     return curr.fetchall()
 
 
-# Please Dont use this function, bad practice!
+@DeprecationWarning
 def perform_query(path, query):
     # conn = sqlite3.connect(path)
     conn = sqlite3.connect(jeet_path)
@@ -95,6 +95,7 @@ def perform_query(path, query):
     return c.fetchall()
 
 
+@DeprecationWarning
 def get_test_data(path):
     """
     Returns first 10 rows of May2015 table as a sample test

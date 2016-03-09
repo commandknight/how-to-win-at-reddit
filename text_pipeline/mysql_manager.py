@@ -35,7 +35,7 @@ get_parent_created_sql = "SELECT parentPost_id, timecreated_utc FROM ParentPostD
 get_parent_post_ids_sql = "SELECT parentPost_id FROM ParentPostDetails"
 
 
-# PLEASE DONT USE THIS METHOD, BAD PRACTICE!
+@DeprecationWarning
 def perform_query(query):
     """
     Method to perform RAW Sql Query and return cursor result list
@@ -47,15 +47,10 @@ def perform_query(query):
     return curr.fetchall()
 
 
+@DeprecationWarning
 def create_cursor():
     return cnx.cursor()
 
-
-"""
-def perform_query(cursor, query):
-    cursor.execute(query)
-    return cursor.fetchall()
-"""
 
 def get_parent_post_data():
     """
