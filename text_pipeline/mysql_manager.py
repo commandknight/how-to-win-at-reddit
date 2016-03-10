@@ -2,16 +2,13 @@ import mysql.connector
 
 from text_pipeline import serialize_comments as sc
 
-"""
-config = {
-    'user': 'jeet',
-    'password': 'paper2mate',
-    'host': 'cs175redditproject.cxayrrely1fe.us-west-2.rds.amazonaws.com',
-    'database': 'cs175reddit',
-    # 'cursorclass' : 'MySQLdb.cursors.SSCursor',
-    'raise_on_warnings': True
-}
-"""
+# config = {
+#     'user': 'jeet',
+#     'password': 'paper2mate',
+#     'host': 'cs175redditproject.cxayrrely1fe.us-west-2.rds.amazonaws.com',
+#     'database': 'cs175reddit',
+#     'raise_on_warnings': True
+# }
 
 config = {
     'user': 'root',
@@ -20,6 +17,7 @@ config = {
     'database': 'cs175reddit',
     'raise_on_warnings': True
 }
+
 cnx = mysql.connector.connect(**config)
 
 add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
@@ -35,7 +33,6 @@ get_parent_created_sql = "SELECT parentPost_id, timecreated_utc FROM ParentPostD
 get_parent_post_ids_sql = "SELECT parentPost_id FROM ParentPostDetails"
 
 
-@DeprecationWarning
 def perform_query(query):
     """
     Method to perform RAW Sql Query and return cursor result list
@@ -47,7 +44,6 @@ def perform_query(query):
     return curr.fetchall()
 
 
-@DeprecationWarning
 def create_cursor():
     return cnx.cursor()
 
@@ -144,6 +140,10 @@ def get_parent_created_info(parent_id):
     result = db_cursor.fetchone()
     db_cursor.close()
     return result
+
+
+def open_connection():
+    cnx = mysql.connector.connect(**config)
 
 
 def close_connection():

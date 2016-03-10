@@ -6,6 +6,8 @@ Product Timed Reddit Data
 - Return as training data and target data
 """
 
+from text_pipeline import comment_db_manager as cdm
+from text_pipeline import mysql_manager
 from text_pipeline import serialize_comments as sc
 
 
@@ -27,10 +29,7 @@ def get_training_data(time_limit=300):
     :param time_limit: In minutes. Number of minutes after parent post is created to define "warm" posts.
     :return: Tuple of training data and target data
     """
-    from text_pipeline import mysql_manager
     all_records = mysql_manager.get_parent_post_data()
-    mysql_manager.close_connection()
-    from text_pipeline import comment_db_manager as cdm
     training_data = []
     target_data = []
     avg_score_subreddit = get_avg_scores_by_subreddit()
@@ -50,10 +49,8 @@ def get_training_data(time_limit=300):
                 children_text += cdm.get_children_text_features(comment_id)
         training_data.append(post_text + children_text)
         target_data.append(1 if float(score) > avg_score_subreddit[subreddit] else 0)
-    cdm.close_db_connection()
     if error > 0:
         print("Total errors in getting time_cut_off data: " + str(error))
-    mysql_manager.close_connection()
     # print("Length of target: ", len(target_data)) #DEBUG
     return training_data, target_data
 
