@@ -76,6 +76,8 @@ def get_children_comments_timed(parent_created_time, children_ids, time_limit):
 def get_unique_parent_ids():
     """
     Function that returns list of unique link_IDs
+    TIMS TERRORITY: 15,000 OFFET TO 30,000 OFFSET
+    JEETS TERRITORY: 30,000 TO 45,000 OFFSET
     :return: list of tuples (link_ids {string},subreddit {string})
     """
     conn = sqlite3.connect(jeet_path)
