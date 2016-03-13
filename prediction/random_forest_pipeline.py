@@ -25,9 +25,9 @@ def rf_pipeline(time_limit=300):
     print("FETCHED THE DATA")
     reddit_clf_randomForest = Pipeline([
         ('vect', CountVectorizer(stop_words=stopwords.words('english'))),
-                                        ('tfidf', TfidfTransformer()),
-                                        ('clf', RandomForestClassifier(class_weight='balanced')),
-                                        ])
+        ('tfidf', TfidfTransformer()),
+        ('clf', RandomForestClassifier(class_weight='balanced')),
+    ])
     print("DOING BLANK RANDOM FORESET")
     scores = cross_val_score(reddit_clf_randomForest, X, y, cv=5, scoring='roc_auc', verbose=1)
     print("NO PARAM RandomForest CLF")
@@ -59,10 +59,10 @@ def rf_pipeline(time_limit=300):
 
 if __name__ == '__main__':
     print("Random Forest Pipeline")
-    cutoff_times_to_test = [10, 50, 75]
+    cutoff_times_to_test = [1]
     score = []
     for cutoff_time in cutoff_times_to_test:
         print("TESETING CUTOFF TIME", cutoff_time)
-        score.append(rf_pipeline(cutoff_time))
+        score.append(rf_pipeline())
     print(score)
     print("BEST CUTOFF TIME:", cutoff_times_to_test[np.argmax(score)])

@@ -23,3 +23,14 @@ for (id_test) in cursor:
 
 cursor.close()
 cnx.close()
+
+
+# from sklearn.utils import shuffle
+# print("did the import")
+#
+# test_X_array = [1,2,3,4,5,6,7,8,9,10]
+# test_Y_array = [1,1,1,1,1,0,0,0,0,0]
+#
+# X,Y = shuffle(test_X_array,test_Y_array,random_state=0)
+# print(X)
+# print(Y)
