@@ -6,6 +6,8 @@ Product Timed Reddit Data
 - Return as training data and target data
 """
 
+from sklearn.utils import shuffle
+
 from text_pipeline import comment_db_manager as cdm
 from text_pipeline import mysql_manager
 from text_pipeline import serialize_comments as sc
@@ -52,7 +54,7 @@ def get_training_data(time_limit=300):
     if error > 0:
         print("Total errors in getting time_cut_off data: " + str(error))
     # print("Length of target: ", len(target_data)) #DEBUG
-    return training_data, target_data
+    return shuffle(training_data, target_data)
 
 
 if __name__ == "__main__":
