@@ -11,6 +11,7 @@ from sklearn.grid_search import RandomizedSearchCV
 from sklearn.pipeline import Pipeline
 
 from prediction.reporting import report
+from prediction.tokenizer import PorterTokenizer
 from text_pipeline import produce_timed_reddit_data as rd
 
 
@@ -22,10 +23,10 @@ def rf_pipeline(time_limit=300):
     # print("PERCENT OF 0s:",y.count(0)/len(y)) # DEBUG
     print("FETCHED THE DATA")
     reddit_clf_randomForest = Pipeline([
-        ('vect', CountVectorizer(stop_words=stopwords.words('english'))),
+        ('vect', CountVectorizer(tokenizer=PorterTokenizer(), stop_words=stopwords.words('english'))),
         ('tfidf', TfidfTransformer()),
         ('clf',
-         RandomForestClassifier(n_estimators=200, class_weight='balanced', criterion='gini', n_jobs=-1, verbose=0)),
+         RandomForestClassifier(n_estimators=2, class_weight='balanced', criterion='gini', n_jobs=-1, verbose=0)),
     ])
     # print("DOING BLANK RANDOM FORESET")
     # scores = cross_val_score(reddit_clf_randomForest, X, y, cv=5, scoring='roc_auc', verbose=1,n_jobs=-1)
@@ -58,10 +59,10 @@ def rf_pipeline(time_limit=300):
 
 if __name__ == '__main__':
     print("Random Forest Pipeline")
-    cutoff_times_to_test = [30]
+    cutoff_times_to_test = [120]
     # TODO: , 60, 90, 100, 120, 150, 200, 300
     score = []
     for cutoff_time in cutoff_times_to_test:
-        print("TESETING CUTOFF TIME", cutoff_time)
+        print("TESTING CUTOFF TIME", cutoff_time)
         score.append(rf_pipeline(cutoff_time))
     print(score)
