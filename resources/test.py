@@ -1,7 +1,7 @@
 import mysql.connector
 
 # conda install -c https://conda.anaconda.org/anaconda mysql-connector-python
-
+# conda install pymysql
 
 config = {
     'user': 'jeet',
