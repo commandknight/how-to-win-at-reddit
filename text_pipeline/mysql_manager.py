@@ -1,24 +1,28 @@
-import mysql.connector
+import pymysql as mysql
 
 from text_pipeline import serialize_comments as sc
 
-# config = {
-#     'user': 'jeet',
-#     'password': 'paper2mate',
-#     'host': 'cs175redditproject.cxayrrely1fe.us-west-2.rds.amazonaws.com',
-#     'database': 'cs175reddit',
-#     'raise_on_warnings': True
-# }
-
 config = {
-    'user': 'root',
+    'user': 'jeet',
     'password': 'paper2mate',
-    'host': 'localhost',
+    'host': 'cs175redditproject.cxayrrely1fe.us-west-2.rds.amazonaws.com',
+    'port': 3306,
     'database': 'cs175reddit',
     'raise_on_warnings': True
 }
 
-cnx = mysql.connector.connect(**config)
+# config = {
+#     'user': 'root',
+#     'password': 'paper2mate',
+#     'host': 'localhost',
+#     'database': 'cs175reddit',
+#     'raise_on_warnings': True
+# }
+
+cnx = mysql.connect(host=config['host'], port=config['port'], user=config['user'], passwd=config['password'],
+                    db=config['database'])
+
+# cnx = mysql.connector.connect(**config)
 
 add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
                         "(parentPost_id,url,timecreated_utc,subreddit_id,subreddit,title,score,author,selftext) "
@@ -56,15 +60,7 @@ def get_parent_post_data():
     """
     curr = cnx.cursor()
     curr.execute(get_parent_data_sql)
-    result = []
-    row = curr.fetchone()
-    while row is not None:
-        try:
-            row = curr.fetchone()
-            if row is not None:
-                result.append(row)
-        except:
-            print("ERROR in getting", row)
+    result = [row for row in curr]
     curr.close()
     return result
 
