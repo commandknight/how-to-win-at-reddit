@@ -4,9 +4,7 @@ Created by Jeet Nagda
 """
 from time import time
 
-import numpy as np
 from nltk.corpus import stopwords
-from sklearn.cross_validation import cross_val_score
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.grid_search import RandomizedSearchCV
@@ -26,30 +24,31 @@ def rf_pipeline(time_limit=300):
     reddit_clf_randomForest = Pipeline([
         ('vect', CountVectorizer(stop_words=stopwords.words('english'))),
         ('tfidf', TfidfTransformer()),
-        ('clf', RandomForestClassifier(class_weight='balanced')),
+        ('clf',
+         RandomForestClassifier(n_estimators=200, class_weight='balanced', criterion='gini', n_jobs=-1, verbose=0)),
     ])
-    print("DOING BLANK RANDOM FORESET")
-    scores = cross_val_score(reddit_clf_randomForest, X, y, cv=5, scoring='roc_auc', verbose=1)
-    print("NO PARAM RandomForest CLF")
-    print(scores.mean())
+    # print("DOING BLANK RANDOM FORESET")
+    # scores = cross_val_score(reddit_clf_randomForest, X, y, cv=5, scoring='roc_auc', verbose=1,n_jobs=-1)
+    # print("NO PARAM RandomForest CLF")
+    # print(scores.mean())
     print("--------------------")
     param_grid = {
-        "clf__n_estimators": [200, 300, 400],
-        "clf__max_depth": [5, None],
-        "clf__max_features": [1, 3, 10],
+        # "clf__n_estimators": [100, 200],
+        "clf__max_depth": [5, 10, 20, None],
+        "clf__max_features": [None, 1, 3, 5, 10],
         "clf__min_samples_split": [1, 3, 10],
         "clf__min_samples_leaf": [1, 3, 10],
         "clf__bootstrap": [True, False],
         'tfidf__use_idf': [True, False],
-        "clf__criterion": ["gini", "entropy"],
+        #"clf__criterion": ["gini", "entropy"],
         'vect__max_df': [0.5, 0.75, 1.0],
-        'vect__max_features': (None, 5000, 10000, 50000)
+        'vect__max_features': (None, 10000, 50000)
     }
     print("STARTING TO TRAIN")
     start = time()
-    n_iter_search = 5
+    n_iter_search = 30
     rs_clf = RandomizedSearchCV(reddit_clf_randomForest, param_distributions=param_grid, n_iter=n_iter_search,
-                                n_jobs=-1, verbose=1, cv=5, scoring='roc_auc')
+                                n_jobs=-1, verbose=1, cv=3, scoring='roc_auc')
     rs_clf.fit(X, y)
     print("RandomizedSearchCV took %.2f seconds for %d candidates"
           " parameter settings." % ((time() - start), n_iter_search))
@@ -59,10 +58,10 @@ def rf_pipeline(time_limit=300):
 
 if __name__ == '__main__':
     print("Random Forest Pipeline")
-    cutoff_times_to_test = [1]
+    cutoff_times_to_test = [30]
+    # TODO: , 60, 90, 100, 120, 150, 200, 300
     score = []
     for cutoff_time in cutoff_times_to_test:
         print("TESETING CUTOFF TIME", cutoff_time)
-        score.append(rf_pipeline())
+        score.append(rf_pipeline(cutoff_time))
     print(score)
-    print("BEST CUTOFF TIME:", cutoff_times_to_test[np.argmax(score)])

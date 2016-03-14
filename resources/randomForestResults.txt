@@ -1,0 +1,82 @@
+cutoff_times_to_test = [30,60,90,100,120,150,200,300]
+
+Best cut-off time using following fixed parameters: (NO Hyperparameter optimization)
+n_estimators=100,class_weight='balanced',criterion='gini',tfidf=True
+
+Average (mean) score of 5 fold cross validation
+Cut off time: 30 min
+0.641339557443
+
+Cut off time: 60 min
+0.634901856401
+
+Cut off time: 90 min
+0.638984703118
+
+Cut off time: 100 min
+0.642549792093
+
+Cut off time: 120 min
+0.637667734351
+
+Cut off time: 150 min
+0.639460565502
+
+Cut off time: 200 min
+0.636700441628
+
+Cut off time: 300 min
+0.638690901003
+
+Hyperparameter Optimization:
+
+
+RandomizedSearchCV took 1011.96 seconds for 30 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.649 (std: 0.004)
+Parameters: {'clf__max_depth': 5, 'vect__max_df': 0.75, 'clf__min_samples_leaf': 10, 'vect__max_features': None, 'clf__min_samples_split': 3, 'clf__bootstrap': True, 'clf__max_features': None, 'tfidf__use_idf': True}
+
+Model with rank: 2
+Mean validation score: 0.644 (std: 0.001)
+Parameters: {'clf__max_depth': None, 'vect__max_df': 0.5, 'clf__min_samples_leaf': 10, 'vect__max_features': 10000, 'clf__min_samples_split': 3, 'clf__bootstrap': True, 'clf__max_features': None, 'tfidf__use_idf': False}
+
+Model with rank: 3
+Mean validation score: 0.641 (std: 0.003)
+Parameters: {'clf__max_depth': None, 'vect__max_df': 0.75, 'clf__min_samples_leaf': 3, 'vect__max_features': 10000, 'clf__min_samples_split': 10, 'clf__bootstrap': False, 'clf__max_features': 3, 'tfidf__use_idf': True}
+
+Model with rank: 4
+Mean validation score: 0.640 (std: 0.003)
+Parameters: {'clf__max_depth': 5, 'vect__max_df': 0.5, 'clf__min_samples_leaf': 10, 'vect__max_features': 50000, 'clf__min_samples_split': 3, 'clf__bootstrap': True, 'clf__max_features': None, 'tfidf__use_idf': False}
+
+Model with rank: 5
+Mean validation score: 0.638 (std: 0.003)
+Parameters: {'clf__max_depth': 20, 'vect__max_df': 0.5, 'clf__min_samples_leaf': 1, 'vect__max_features': 10000, 'clf__min_samples_split': 10, 'clf__bootstrap': False, 'clf__max_features': 10, 'tfidf__use_idf': True}
+
+Traceback (most recent call last):
+[mean: 0.64929, std: 0.00378, params: {'clf__max_depth': 5, 'vect__max_df': 0.75, 'clf__min_samples_leaf': 10, 'vect__max_features': None, 'clf__min_samples_split': 3, 'clf__bootstrap': True, 'clf__max_features': None, 'tfidf__use_idf': True}]
+
+
+TRY 2
+
+RandomizedSearchCV took 3325.27 seconds for 30 candidates parameter settings.
+Model with rank: 1
+Mean validation score: 0.655 (std: 0.002)
+Parameters: {'clf__bootstrap': True, 'clf__min_samples_split': 1, 'clf__max_depth': 10, 'tfidf__use_idf': False, 'vect__max_features': 50000, 'clf__max_features': None, 'vect__max_df': 0.75, 'clf__min_samples_leaf': 10}
+
+Model with rank: 2
+Mean validation score: 0.646 (std: 0.004)
+Parameters: {'clf__bootstrap': True, 'clf__min_samples_split': 10, 'clf__max_depth': 20, 'tfidf__use_idf': False, 'vect__max_features': None, 'clf__max_features': None, 'vect__max_df': 1.0, 'clf__min_samples_leaf': 1}
+
+Model with rank: 3
+Mean validation score: 0.643 (std: 0.001)
+Parameters: {'clf__bootstrap': True, 'clf__min_samples_split': 1, 'clf__max_depth': 20, 'tfidf__use_idf': False, 'vect__max_features': 10000, 'clf__max_features': 10, 'vect__max_df': 0.75, 'clf__min_samples_leaf': 10}
+
+Model with rank: 4
+Mean validation score: 0.640 (std: 0.005)
+Parameters: {'clf__bootstrap': False, 'clf__min_samples_split': 1, 'clf__max_depth': 20, 'tfidf__use_idf': True, 'vect__max_features': 10000, 'clf__max_features': 5, 'vect__max_df': 0.75, 'clf__min_samples_leaf': 3}
+
+Model with rank: 5
+Mean validation score: 0.636 (std: 0.003)
+Parameters: {'clf__bootstrap': True, 'clf__min_samples_split': 10, 'clf__max_depth': None, 'tfidf__use_idf': True, 'vect__max_features': 10000, 'clf__max_features': None, 'vect__max_df': 0.75, 'clf__min_samples_leaf': 1}
+
+[mean: 0.65450, std: 0.00244, params: {'clf__bootstrap': True, 'clf__min_samples_split': 1, 'clf__max_depth': 10, 'tfidf__use_idf': False, 'vect__max_features': 50000, 'clf__max_features': None, 'vect__max_df': 0.75, 'clf__min_samples_leaf': 10}]
