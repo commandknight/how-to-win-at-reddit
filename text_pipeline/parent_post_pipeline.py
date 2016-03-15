@@ -9,7 +9,7 @@ from text_pipeline import comment_db_manager
 def get_list_of_ids_from_csv():
     import csv
     list_of_post_tuples = []
-    with open('/Users/jnagda/PycharmProjects/how-to-win-at-reddit/resources/jeet_10000.csv',
+    with open('/Users/jnagda/PycharmProjects/how-to-win-at-reddit/resources/jeet_25000.csv',
               'r') as csvfile:
         csvreader = csv.reader(csvfile)
         next(csvreader, None)
