@@ -1,13 +1,6 @@
 # Jeet's Comment Pipeline
-
 """
 Create a pipeline method that for each parent post in parentPostDetail table, update comments field with list of ids (referring to May2015 table)
-of comments by calling get_children_commentsIDs for each parent ID
-name: process_child_comments_pipeline()
-
-Create a method that given a parent post ID, will get all the children posts
-name: get_children_commentsIDs()
-
 """
 
 from text_pipeline import comment_db_manager
@@ -35,12 +28,16 @@ def get_children_commentIDs(parentPost_id):
 
 
 def update_all_mysql_parent_posts():
+    """
+    Main method that will get all the ids of the posts in MySQL and update each one
+    :return: None
+    """
     print("GETTING IDS")
     list_of_ids = mysql_manager.get_parent_post_ids()
     print("GOT IDS:" + str(len(list_of_ids)))
     x = 0
     for (parent_id,) in list_of_ids:
-        print("PROCESSING: " + parent_id + " ---iter -- " + str(x))
+        # print("PROCESSING: " + parent_id + " ---iter -- " + str(x)) #DEBUG
         x += 1
         process_child_comments_pipeline(parent_id)
 
