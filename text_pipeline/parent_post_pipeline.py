@@ -1,23 +1,22 @@
 # JEET's Parent Post Module Pipeline
-"""
-Create method that creates a new post detail table in sqlite if it doesn’t exist already
-name: create_parentPostDetail_table()
-Create method that fetches JSON of the parent post for a given key of a parent post and returns JSON of the
- parent post only [NOTE: will need to use Reddit API to fetch JSON, this is not in the May2015 table]
-name: get_parentpost_json()
-Create method that gets unique ids for parent posts from May2015 comment data using sql statement in
- sqlmanager and then fetches json for each parent, returns dictionary
-name: get_all_parentpost_ids()
-Create a pipeline processing method: 1 - calls get_all_parentpost_ids,
- 2- for each id calls get_parentpost_json, 3- inserts each json data into a new sqlite table
-name: process_parent_data_pipeline()
-"""
+
 
 import time
-
 import praw
-
 from text_pipeline import comment_db_manager
+
+
+def get_list_of_ids_from_csv():
+    import csv
+    list_of_post_tuples = []
+    with open('/Users/jnagda/PycharmProjects/how-to-win-at-reddit/resources/jeet_10000.csv',
+              'r') as csvfile:
+        csvreader = csv.reader(csvfile)
+        next(csvreader, None)
+        for row in csvreader:
+            list_of_post_tuples.append((row[0], row[1]))
+    return list_of_post_tuples
+
 
 
 def truncate_identifier_from_id(id):
@@ -60,18 +59,26 @@ def process_parent_data_pipeline():
     start_time = time.time()
     x = 0
     list_of_dicts = []
-    for parent_id in comment_db_manager.get_unique_parent_ids():
+    list_of_ids = get_list_of_ids_from_csv()
+    print("got-ids")
+    for parent_id in list_of_ids:
         print("GETTING:", x, parent_id)
         temp = get_parentpost_dict(parent_id)
         if temp is not None:
-            list_of_dicts.append(temp)
+            time_created = temp['timecreated']
+            if 1430438400.0 < time_created < 1433116799.0:
+                print("FOUND A VALID POST")
+                list_of_dicts.append(temp)
         x += 1
     from text_pipeline import mysql_manager
-    mysql_manager.insert_parentdetails_BIG(list_of_dicts)
+    # mysql_manager.insert_parentdetails_BIG(list_of_dicts)
     print("--- %s seconds ---" % (time.time() - start_time))
     comment_db_manager.close_db_connection()
     mysql_manager.close_connection()
 
 
 if __name__ == "__main__":
+    # test= ('t3_2xedq9','SVExchange')
+    # x = get_parentpost_dict(test)
+    # print(x)
     process_parent_data_pipeline()

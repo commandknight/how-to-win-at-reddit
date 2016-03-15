@@ -5,6 +5,7 @@ Created by Jeet Nagda
 from time import time
 
 from nltk.corpus import stopwords
+from sklearn.cross_validation import cross_val_score
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.grid_search import RandomizedSearchCV
@@ -26,11 +27,12 @@ def rf_pipeline(time_limit=300):
         ('vect', CountVectorizer(tokenizer=PorterTokenizer(), stop_words=stopwords.words('english'))),
         ('tfidf', TfidfTransformer()),
         ('clf',
-         RandomForestClassifier(n_estimators=2, class_weight='balanced', criterion='gini', n_jobs=-1, verbose=0)),
+         RandomForestClassifier(n_estimators=100, class_weight='balanced', criterion='gini', n_jobs=-1, verbose=0)),
     ])
     # print("DOING BLANK RANDOM FORESET")
-    # scores = cross_val_score(reddit_clf_randomForest, X, y, cv=5, scoring='roc_auc', verbose=1,n_jobs=-1)
+    # scores = cross_val_score(reddit_clf_randomForest, X, y, cv=3, scoring='roc_auc', verbose=1,n_jobs=-1)
     # print("NO PARAM RandomForest CLF")
+    # print(scores)
     # print(scores.mean())
     print("--------------------")
     param_grid = {
@@ -47,7 +49,7 @@ def rf_pipeline(time_limit=300):
     }
     print("STARTING TO TRAIN")
     start = time()
-    n_iter_search = 30
+    n_iter_search = 1
     rs_clf = RandomizedSearchCV(reddit_clf_randomForest, param_distributions=param_grid, n_iter=n_iter_search,
                                 n_jobs=-1, verbose=1, cv=3, scoring='roc_auc')
     rs_clf.fit(X, y)
@@ -60,7 +62,7 @@ def rf_pipeline(time_limit=300):
 if __name__ == '__main__':
     print("Random Forest Pipeline")
     cutoff_times_to_test = [120]
-    # TODO: , 60, 90, 100, 120, 150, 200, 300
+    # TODO: 30, 60, 90, 100, 120, 150, 200, 300
     score = []
     for cutoff_time in cutoff_times_to_test:
         print("TESTING CUTOFF TIME", cutoff_time)

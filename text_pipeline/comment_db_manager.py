@@ -9,7 +9,7 @@ sql_statement_children = "SELECT body,author FROM May2015 WHERE id = ?"
 
 sql_get_children = 'SELECT id, parent_id, link_id, created_utc FROM May2015 WHERE link_id = ?'
 
-sql_get_child = 'SELECT id, created_utc FROM May2015 WHERE id = ?'
+sql_get_child = 'SELECT id, created_utc, body FROM May2015 WHERE id = ?'
 
 def open_db_connection(path):
     """
@@ -63,7 +63,7 @@ def get_children_comments_timed(parent_created_time, children_ids, time_limit):
         result = db_curr.execute(sql_get_child, (x, ))
 
         # Only allow comments which fall within the parent post / time limit
-        for c_id, time in result:
+        for c_id, time, body in result:
             f_time = float(time)
             if parent_time <= f_time <= cutoff_time:
                 pruned_children.append(c_id)
@@ -83,8 +83,9 @@ def get_unique_parent_ids():
     conn = sqlite3.connect(jeet_path)
     curr = conn.cursor()
     print("getting ids")
+    # JEET: Finished OFFSET 38000 on March 13th at 11:00am
     curr.execute(
-        'SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' AND link_id = parent_id LIMIT 1000 OFFSET 3000')
+        'SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' AND link_id = parent_id LIMIT 100 OFFSET 1000000')
     return curr.fetchall()
 
 

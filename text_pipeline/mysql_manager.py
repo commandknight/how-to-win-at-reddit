@@ -2,22 +2,23 @@ import pymysql as mysql
 
 from text_pipeline import serialize_comments as sc
 
+# config = {
+#     'user': 'jeet',
+#     'password': 'paper2mate',
+#     'host': 'cs175redditproject.cxayrrely1fe.us-west-2.rds.amazonaws.com',
+#     'port': 3306,
+#     'database': 'cs175reddit',
+#     'raise_on_warnings': True
+# }
+
 config = {
-    'user': 'jeet',
+    'user': 'root',
     'password': 'paper2mate',
-    'host': 'cs175redditproject.cxayrrely1fe.us-west-2.rds.amazonaws.com',
+    'host': 'localhost',
     'port': 3306,
     'database': 'cs175reddit',
     'raise_on_warnings': True
 }
-
-# config = {
-#     'user': 'root',
-#     'password': 'paper2mate',
-#     'host': 'localhost',
-#     'database': 'cs175reddit',
-#     'raise_on_warnings': True
-# }
 
 cnx = mysql.connect(host=config['host'], port=config['port'], user=config['user'], passwd=config['password'],
                     db=config['database'])
@@ -30,7 +31,7 @@ add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
 
 update_parentPost_child_ids = "UPDATE ParentPostDetails SET childrenComments=%s WHERE parentPost_id=%s "
 
-get_parent_data_sql = "SELECT parentPost_id,childrenComments,score,url,selftext,timecreated_utc,subreddit FROM ParentPostDetails"
+get_parent_data_sql = "SELECT parentPost_id,childrenComments,score,url,selftext,timecreated_utc,subreddit,title,author FROM ParentPostDetails"
 
 get_parent_created_sql = "SELECT parentPost_id, timecreated_utc FROM ParentPostDetails WHERE parentPost_id = %s"
 
@@ -60,7 +61,9 @@ def get_parent_post_data():
     """
     curr = cnx.cursor()
     curr.execute(get_parent_data_sql)
-    result = [row for row in curr]
+    result = []
+    for row in curr:
+        result.append(row)
     curr.close()
     return result
 
