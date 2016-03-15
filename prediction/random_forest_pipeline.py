@@ -5,7 +5,6 @@ Created by Jeet Nagda
 from time import time
 
 from nltk.corpus import stopwords
-from sklearn.cross_validation import cross_val_score
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.grid_search import RandomizedSearchCV
@@ -24,7 +23,7 @@ def rf_pipeline(time_limit=300):
     # print("PERCENT OF 0s:",y.count(0)/len(y)) # DEBUG
     print("FETCHED THE DATA")
     reddit_clf_randomForest = Pipeline([
-        ('vect', CountVectorizer(tokenizer=PorterTokenizer(), stop_words=stopwords.words('english'))),
+        ('vect', CountVectorizer(stop_words=stopwords.words('english'))),
         ('tfidf', TfidfTransformer()),
         ('clf',
          RandomForestClassifier(n_estimators=100, class_weight='balanced', criterion='gini', n_jobs=-1, verbose=0)),
@@ -37,12 +36,13 @@ def rf_pipeline(time_limit=300):
     print("--------------------")
     param_grid = {
         # "clf__n_estimators": [100, 200],
-        "clf__max_depth": [5, 10, 20, None],
+        "vect__tokenizer": [None, PorterTokenizer()],  # testing stemming or not
+        # "clf__max_depth": [5, 10, 20, None], too expensive?
         "clf__max_features": [None, 1, 3, 5, 10],
-        "clf__min_samples_split": [1, 3, 10],
-        "clf__min_samples_leaf": [1, 3, 10],
+        "clf__min_samples_split": [1, 3],
+        "clf__min_samples_leaf": [1, 3],
         "clf__bootstrap": [True, False],
-        'tfidf__use_idf': [True, False],
+        'tfidf__use_idf': [False],  # False is better?
         #"clf__criterion": ["gini", "entropy"],
         'vect__max_df': [0.5, 0.75, 1.0],
         'vect__max_features': (None, 10000, 50000)
