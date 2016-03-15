@@ -67,11 +67,10 @@ def process_parent_data_pipeline():
         if temp is not None:
             time_created = temp['timecreated']
             if 1430438400.0 < time_created < 1433116799.0:
-                print("FOUND A VALID POST")
                 list_of_dicts.append(temp)
         x += 1
     from text_pipeline import mysql_manager
-    # mysql_manager.insert_parentdetails_BIG(list_of_dicts)
+    mysql_manager.insert_parentdetails_BIG(list_of_dicts)
     print("--- %s seconds ---" % (time.time() - start_time))
     comment_db_manager.close_db_connection()
     mysql_manager.close_connection()
