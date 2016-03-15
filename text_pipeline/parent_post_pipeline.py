@@ -1,6 +1,4 @@
 # JEET's Parent Post Module Pipeline
-
-
 import time
 import praw
 from text_pipeline import comment_db_manager
@@ -16,7 +14,6 @@ def get_list_of_ids_from_csv():
         for row in csvreader:
             list_of_post_tuples.append((row[0], row[1]))
     return list_of_post_tuples
-
 
 
 def truncate_identifier_from_id(id):
@@ -50,11 +47,6 @@ def get_parentpost_dict(parentPost):
         return
 
 
-"""
-def process_parentPostID(parent_id):
-    mysql_manager.insert_parent_dict_into_parentPostDetail(parent_id, get_parentpost_dict(parent_id))
-"""
-
 def process_parent_data_pipeline():
     start_time = time.time()
     x = 0
@@ -69,6 +61,9 @@ def process_parent_data_pipeline():
             if 1430438400.0 < time_created < 1433116799.0:
                 list_of_dicts.append(temp)
         x += 1
+    import json
+    with open('backup_jeet_10000.json', 'w') as outfile:
+        json.dump(list_of_dicts, outfile)
     from text_pipeline import mysql_manager
     mysql_manager.insert_parentdetails_BIG(list_of_dicts)
     print("--- %s seconds ---" % (time.time() - start_time))
