@@ -1,3 +1,7 @@
+"""
+Comment_DB_Manager is the data source for our kaggle data source
+"""
+
 import sqlite3
 
 jeet_path = '/Users/jnagda/Documents/Reddit_Comments/database.sqlite'
@@ -10,6 +14,7 @@ sql_statement_children = "SELECT body,author FROM May2015 WHERE id = ?"
 sql_get_children = 'SELECT id, parent_id, link_id, created_utc FROM May2015 WHERE link_id = ?'
 
 sql_get_child = 'SELECT id, created_utc, body FROM May2015 WHERE id = ?'
+
 
 def open_db_connection(path):
     """
@@ -58,18 +63,14 @@ def get_children_comments_timed(parent_created_time, children_ids, time_limit):
     parent_time = float(parent_created_time)
     cutoff_time = parent_time + (time_limit * 60)
     db_curr = conn.cursor()
-
     for x in children_ids:
-        result = db_curr.execute(sql_get_child, (x, ))
-
+        result = db_curr.execute(sql_get_child, (x,))
         # Only allow comments which fall within the parent post / time limit
         for c_id, time, body in result:
             f_time = float(time)
             if parent_time <= f_time <= cutoff_time:
                 pruned_children.append(c_id)
-
     db_curr.close()
-
     return pruned_children
 
 
@@ -83,12 +84,12 @@ def get_unique_parent_ids():
     conn = sqlite3.connect(jeet_path)
     curr = conn.cursor()
     print("getting ids")
-    # JEET: Finished OFFSET 38000 on March 13th at 11:00am
     curr.execute(
         'SELECT DISTINCT link_id,subreddit FROM May2015 WHERE subreddit != \'promos\' AND link_id = parent_id LIMIT 100 OFFSET 1000000')
     return curr.fetchall()
 
 
+""" DEPRECATED FUNCTION DONT USE! """
 def perform_query(path, query):
     # conn = sqlite3.connect(path)
     conn = sqlite3.connect(jeet_path)
@@ -97,6 +98,7 @@ def perform_query(path, query):
     return c.fetchall()
 
 
+""" DEPRECATED FUNCTION DONT USE! """
 def get_test_data(path):
     """
     Returns first 10 rows of May2015 table as a sample test

@@ -2,28 +2,28 @@ import pymysql as mysql
 
 from text_pipeline import serialize_comments as sc
 
-config = {
-    'user': 'jeet',
-    'password': 'paper2mate',
-    'host': 'cs175redditproject.cxayrrely1fe.us-west-2.rds.amazonaws.com',
-    'port': 3306,
-    'database': 'cs175reddit',
-    'raise_on_warnings': True
-}
-
 # config = {
-#     'user': 'root',
+#     'user': 'jeet',
 #     'password': 'paper2mate',
-#     'host': 'localhost',
+#     'host': 'cs175redditproject.cxayrrely1fe.us-west-2.rds.amazonaws.com',
 #     'port': 3306,
 #     'database': 'cs175reddit',
 #     'raise_on_warnings': True
 # }
 
+config = {
+    'user': 'root',
+    'password': 'paper2mate',
+    'host': 'localhost',
+    'port': 3306,
+    'database': 'cs175reddit',
+    'raise_on_warnings': True
+}
+
 cnx = mysql.connect(host=config['host'], port=config['port'], user=config['user'], passwd=config['password'],
                     db=config['database'])
 
-# cnx = mysql.connector.connect(**config)
+# cnx = mysql.connector.connect(**config) # OLD PACKAGE
 
 add_parentPostDetail = ("INSERT IGNORE INTO ParentPostDetails "
                         "(parentPost_id,url,timecreated_utc,subreddit_id,subreddit,title,score,author,selftext) "
@@ -49,6 +49,7 @@ def perform_query(query):
     return curr.fetchall()
 
 
+""" DEPRECATED FUNCTION DONT USE! """
 def create_cursor():
     return cnx.cursor()
 
@@ -56,19 +57,25 @@ def create_cursor():
 def get_parent_post_data():
     """
     Method to get the text related features of parent_post_details, including ChildrenID list
-    NOTE, this method may hang, in that case, run again? Jeet is working on more stable
     :return: list from Cursor for all ParentPostDetail records
     """
     curr = cnx.cursor()
     curr.execute(get_parent_data_sql)
     result = []
+    # x = 0
     for row in curr:
+        # print("ITER",x)
         result.append(row)
+        # x += 1
     curr.close()
     return result
 
 
 def get_parent_post_ids():
+    """
+    Method to get all the ids of the parent post records
+    :return: List[Tuples(String,)]
+    """
     curr = cnx.cursor()
     curr.execute(get_parent_post_ids_sql)
     result = curr.fetchall()
@@ -88,7 +95,7 @@ def update_parentPost(child_ids, parentPost_id):
     try:
         curr.execute(update_parentPost_child_ids, (child_ids_serialized, parentPost_id))
     except:
-        print("ERROR in updating with children ids: " + str(curr.statement))
+        print("ERROR in updating with children ids: " + parentPost_id)
     cnx.commit()
     curr.close()
 
@@ -134,15 +141,16 @@ def insert_parentdetails_BIG(list_of_dicts):
 
 
 def get_parent_created_info(parent_id):
+    """
+    Function to get the created informtion for the parent post id
+    :param parent_id: id of the post to lookup
+    :return: Tuple(Float,)) where the float is the UTC time stamp of creation
+    """
     db_cursor = cnx.cursor()
     db_cursor.execute(get_parent_created_sql, (parent_id,))
     result = db_cursor.fetchone()
     db_cursor.close()
     return result
-
-
-def open_connection():
-    cnx = mysql.connector.connect(**config)
 
 
 def close_connection():

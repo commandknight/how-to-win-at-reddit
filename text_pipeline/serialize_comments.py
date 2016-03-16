@@ -1,3 +1,6 @@
+# This module uses JSON to serialize and deserialize a python list
+# Will be used to interpret and upload information to MySQL as BLOB
+
 import json
 
 
