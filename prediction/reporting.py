@@ -12,4 +12,3 @@ def report(grid_scores, n_top=3):
             np.std(score.cv_validation_scores)))
         print("Parameters: {0}".format(score.parameters))
         print("")
-    return top_scores[1].mean_validation_score
