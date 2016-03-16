@@ -33,11 +33,11 @@ def rf_pipeline(time_limit=300):
         ('clf',
          RandomForestClassifier(n_estimators=50, class_weight='balanced', criterion='gini', n_jobs=-1, verbose=1)),
     ])
-    # print("DOING BLANK RANDOM FORESET")
-    # scores = cross_val_score(reddit_clf_randomForest, X, y, cv=3, scoring='roc_auc', verbose=1,n_jobs=-1)
-    # print("NO PARAM RandomForest CLF")
-    # print(scores)
-    # print(scores.mean())
+    print("DOING BLANK RANDOM FORESET")
+    scores = cross_val_score(reddit_clf_randomForest, X, y, cv=3, scoring='roc_auc', verbose=1, n_jobs=-1)
+    print("NO PARAM RandomForest CLF")
+    print(scores)
+    print(scores.mean())
     print("--------------------")
     param_grid = {
         # "clf__n_estimators": [50, 100, 150],
