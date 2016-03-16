@@ -37,7 +37,7 @@ def update_all_mysql_parent_posts():
     print("GOT IDS:" + str(len(list_of_ids)))
     x = 0
     for (parent_id,) in list_of_ids:
-        # print("PROCESSING: " + parent_id + " ---iter -- " + str(x)) #DEBUG
+        print("PROCESSING: " + parent_id + " ---iter -- " + str(x))  # DEBUG
         x += 1
         process_child_comments_pipeline(parent_id)
 

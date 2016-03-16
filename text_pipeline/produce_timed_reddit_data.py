@@ -31,7 +31,6 @@ def get_training_data(time_limit=600):
     :return: Tuple of training data and target data
     """
     all_records = mysql_manager.get_parent_post_data()
-    all_records = [all_records[0]]
     training_data = []
     target_data = []
     avg_score_subreddit = get_avg_scores_by_subreddit()
