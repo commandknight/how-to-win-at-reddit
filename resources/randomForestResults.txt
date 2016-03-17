@@ -1,4 +1,5 @@
-                                         RandomizedSearchCV took 7948.05 seconds for 20 candidates parameter settings.
+30 min cut off
+
 Model with rank: 1
 Mean validation score: 0.669 (std: 0.009)
 Parameters: {'clf__min_samples_leaf': 3, 'clf__min_samples_split': 3, 'vect__tokenizer': None, 'clf__max_features': 10, 'clf__bootstrap': False, 'vect__max_df': 1.0, 'tfidf__use_idf': False, 'vect__max_features': 50000}
