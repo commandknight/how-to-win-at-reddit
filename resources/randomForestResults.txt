@@ -62,3 +62,24 @@ Parameters: {'clf__bootstrap': True, 'clf__min_samples_split': 1, 'clf__max_feat
 Model with rank: 5
 Mean validation score: 0.663 (std: 0.003)
 Parameters: {'clf__bootstrap': True, 'clf__min_samples_split': 3, 'clf__max_features': 5, 'vect__tokenizer': <prediction.tokenizer.PorterTokenizer object at 0x11ae5fa58>, 'vect__max_features': 10000, 'tfidf__use_idf': False}
+
+120 cut off
+Model with rank: 1
+Mean validation score: 0.742 (std: 0.003)
+Parameters: {'vect__tokenizer': None, 'tfidf__use_idf': False, 'clf__bootstrap': False, 'clf__min_samples_split': 1, 'vect__max_features': 10000, 'clf__max_features': 10}
+
+Model with rank: 2
+Mean validation score: 0.723 (std: 0.004)
+Parameters: {'vect__tokenizer': None, 'tfidf__use_idf': False, 'clf__bootstrap': True, 'clf__min_samples_split': 3, 'vect__max_features': 10000, 'clf__max_features': 1}
+
+Model with rank: 3
+Mean validation score: 0.722 (std: 0.004)
+Parameters: {'vect__tokenizer': None, 'tfidf__use_idf': False, 'vect__max_features': 10000, 'clf__bootstrap': False, 'clf__min_samples_split': 1, 'clf__max_features': 1}
+
+Model with rank: 4
+Mean validation score: 0.718 (std: 0.001)
+Parameters: {'vect__tokenizer': None, 'tfidf__use_idf': False, 'vect__max_features': 50000, 'clf__bootstrap': True, 'clf__min_samples_split': 1, 'clf__max_features': 1}
+
+Model with rank: 5
+Mean validation score: 0.717 (std: 0.002)
+Parameters: {'vect__tokenizer': <prediction.tokenizer.PorterTokenizer object at 0x000001DFBD9E78D0>, 'tfidf__use_idf': False, 'vect__max_features': 50000, 'clf__bootstrap': True, 'clf__min_samples_split': 3, 'clf__max_features': 5}
