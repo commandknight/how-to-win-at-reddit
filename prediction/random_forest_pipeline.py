@@ -25,16 +25,18 @@ def rf_pipeline(time_limit=300):
         data = json.load(data_file)
     X, y = data[0], data[1]
     # X, y = rd.get_training_data(time_limit)
-    # print("PERCENT OF 0s:",y.count(0)/len(y)) # DEBUG
+    print("PERCENT OF 0s (Not Popular):", y.count(0) / len(y))  # DEBUG
     print("FETCHED THE DATA")
     reddit_clf_randomForest = Pipeline([
-        ('vect', CountVectorizer(stop_words=stopwords.words('english'))),
+        ('vect', CountVectorizer(tokenizer=PorterTokenizer(), stop_words=stopwords.words('english'))),
         ('tfidf', TfidfTransformer()),
         ('clf',
          RandomForestClassifier(n_estimators=50, class_weight='balanced', criterion='gini', n_jobs=-1, verbose=1)),
     ])
-    print("DOING BLANK RANDOM FORESET")
+    print("DOING BLANK RANDOM FOREST")
+    start = time()
     scores = cross_val_score(reddit_clf_randomForest, X, y, cv=3, scoring='roc_auc', verbose=1, n_jobs=-1)
+    print("CrossValidation took %.2f seconds" % (time() - start))
     print("NO PARAM RandomForest CLF")
     print(scores)
     print(scores.mean())
@@ -48,7 +50,7 @@ def rf_pipeline(time_limit=300):
         # "clf__min_samples_leaf": [1, 3],
         "clf__bootstrap": [True, False],
         'tfidf__use_idf': [False],  # False is better?
-        #"clf__criterion": ["gini", "entropy"],
+        # "clf__criterion": ["gini", "entropy"],
         # 'vect__max_df': [0.5, 0.75, 1.0],
         'vect__max_features': (None, 10000, 50000)
     }
@@ -60,13 +62,12 @@ def rf_pipeline(time_limit=300):
     rs_clf.fit(X, y)
     print("RandomizedSearchCV took %.2f seconds for %d candidates"
           " parameter settings." % ((time() - start), n_iter_search))
-    # best = report(rs_clf.grid_scores_, 5)
     return report(rs_clf.grid_scores_, 5)
 
 
 if __name__ == '__main__':
     print("Random Forest Pipeline")
-    cutoff_times_to_test = [120]
+    cutoff_times_to_test = [90]
     # TODO: 30, 60, 90, 100, 120, 150, 200, 300
     score = []
     for cutoff_time in cutoff_times_to_test:
