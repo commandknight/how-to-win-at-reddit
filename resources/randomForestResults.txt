@@ -83,3 +83,7 @@ Parameters: {'vect__tokenizer': None, 'tfidf__use_idf': False, 'vect__max_featur
 Model with rank: 5
 Mean validation score: 0.717 (std: 0.002)
 Parameters: {'vect__tokenizer': <prediction.tokenizer.PorterTokenizer object at 0x000001DFBD9E78D0>, 'tfidf__use_idf': False, 'vect__max_features': 50000, 'clf__bootstrap': True, 'clf__min_samples_split': 3, 'clf__max_features': 5}
+
+NO PARAM RandomForest CLF
+[ 0.73310435  0.73269982  0.73310917]
+0.73297111191
