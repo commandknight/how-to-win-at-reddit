@@ -21,7 +21,7 @@ def rf_pipeline(time_limit=300):
     print("GETTING THE DATA WITH CUTOFF TIME: " + str(time_limit))
     print("...")
     import json
-    with open('/Users/jnagda/PycharmProjects/how-to-win-at-reddit/text_pipeline/data90.json') as data_file:
+    with open('/Users/jnagda/PycharmProjects/how-to-win-at-reddit/text_pipeline/data100.json') as data_file:
         data = json.load(data_file)
     X, y = data[0], data[1]
     # X, y = rd.get_training_data(time_limit)
@@ -59,7 +59,7 @@ def rf_pipeline(time_limit=300):
     n_iter_search = 10
     rs_clf = RandomizedSearchCV(reddit_clf_randomForest, param_distributions=param_grid, n_iter=n_iter_search,
                                 n_jobs=-1, verbose=1, cv=3, scoring='roc_auc')
-    rs_clf.fit(X, y)
+    # rs_clf.fit(X, y)
     print("RandomizedSearchCV took %.2f seconds for %d candidates"
           " parameter settings." % ((time() - start), n_iter_search))
     return report(rs_clf.grid_scores_, 5)
@@ -67,7 +67,7 @@ def rf_pipeline(time_limit=300):
 
 if __name__ == '__main__':
     print("Random Forest Pipeline")
-    cutoff_times_to_test = [90]
+    cutoff_times_to_test = [100]
     # TODO: 30, 60, 90, 100, 120, 150, 200, 300
     score = []
     for cutoff_time in cutoff_times_to_test:

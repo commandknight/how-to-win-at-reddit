@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from nltk.corpus import stopwords
 from sklearn import svm
+from sklearn.cross_validation import cross_val_score
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.grid_search import RandomizedSearchCV
@@ -20,12 +21,21 @@ from text_pipeline import produce_timed_reddit_data as rd
 def svm_pipeline(time_limit=300):
     print("GETTING THE DATA")
     print("...")
-    X, y = rd.get_training_data(time_limit)
+    import json
+    with open('/Users/jnagda/PycharmProjects/how-to-win-at-reddit/text_pipeline/data100.json') as data_file:
+        data = json.load(data_file)
+    X, y = data[0], data[1]
+    # X, y = rd.get_training_data(time_limit)
     print("FETCHED THE DATA")
     clf_svm = Pipeline([('vect', CountVectorizer(stop_words=stopwords.words('english'))),
                         ('tfidf', TfidfTransformer()),
-                        ('clf', svm.SVC(verbose=1, gamma='auto', class_weight='balanced')),
+                        ('clf', svm.SVC(kernel='linear', verbose=1, gamma='auto', class_weight='balanced')),
                         ])
+    start = time()
+    scores = cross_val_score(clf_svm, X, y, cv=3, scoring='roc_auc', verbose=1, n_jobs=-1)
+    print(scores)
+    print(scores.mean())
+    print("CrossValidation took %.2f seconds" % (time() - start))
     # kernals: one of ‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’
     param_grid = {
         'tfidf__use_idf': [True, False],
@@ -40,7 +50,7 @@ def svm_pipeline(time_limit=300):
     n_iter_search = 40
     rsvm_clf = RandomizedSearchCV(clf_svm, param_distributions=param_grid, n_iter=n_iter_search,
                                   n_jobs=-1, verbose=1, cv=5, scoring='roc_auc')
-    rsvm_clf.fit(X, y)
+    # rsvm_clf.fit(X, y)
     print("RandomizedSearchCV took %.2f seconds for %d candidates"
           " parameter settings." % ((time() - start), n_iter_search))
     report(rsvm_clf.grid_scores_, 5)
